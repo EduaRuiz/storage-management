@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/storage-management/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/storage-management/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/storage-management",
+  "projects": {
+    "storage-management": {
+      "type": "application",
+      "root": "apps/storage-management",
+      "entryFile": "main",
+      "sourceRoot": "apps/storage-management/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/storage-management/tsconfig.app.json"
+      }
+    },
+    "inventory": {
+      "type": "application",
+      "root": "apps/inventory",
+      "entryFile": "main",
+      "sourceRoot": "apps/inventory/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/inventory/tsconfig.app.json"
+      }
+    }
+  }
+}
