@@ -1,6 +1,6 @@
-import { Observable } from 'rxjs';
-import { StockMongoRepository } from '../repositories';
-import { StockMongoEntity } from '../schemas';
+import { Observable, from, map, switchMap } from 'rxjs';
+import { ProductMongoRepository, StockMongoRepository } from '../repositories';
+import { ProductMongoEntity, StockMongoEntity } from '../schemas';
 import { IStockDomainService } from 'apps/inventory/src/domain/services';
 import { Injectable } from '@nestjs/common';
 
@@ -8,25 +8,56 @@ import { Injectable } from '@nestjs/common';
 export class StockMongoService
   implements IStockDomainService<StockMongoEntity>
 {
-  constructor(private readonly stockMongoRepository: StockMongoRepository) {}
+  constructor(
+    private readonly stockMongoRepository: StockMongoRepository,
+    private readonly productMongoRepository: ProductMongoRepository,
+  ) {}
 
-  create(entity: StockMongoEntity): Observable<StockMongoEntity> {
-    return this.stockMongoRepository.create(entity);
+  createStock(
+    productId: string,
+    entity: StockMongoEntity,
+  ): Observable<StockMongoEntity> {
+    return from(this.productMongoRepository.findOneById(productId)).pipe(
+      switchMap((product: ProductMongoEntity) => {
+        return this.stockMongoRepository.create({ ...entity, product });
+      }),
+    );
   }
 
-  update(
+  updateQuantity(
     entityId: string,
     entity: StockMongoEntity,
   ): Observable<StockMongoEntity> {
-    return this.stockMongoRepository.update(entityId, entity);
+    return this.stockMongoRepository.findOneById(entityId).pipe(
+      switchMap((currentEntity: StockMongoEntity) => {
+        currentEntity = {
+          ...currentEntity,
+          quantity: entity.quantity,
+          _id: entityId,
+        };
+        return this.stockMongoRepository.update(entityId, currentEntity);
+      }),
+    );
   }
 
-  delete(entityId: string): Observable<StockMongoEntity> {
-    return this.stockMongoRepository.delete(entityId);
+  findAllByProductId(productId: string): Observable<StockMongoEntity[]> {
+    return this.stockMongoRepository.findAll().pipe(
+      map((stocks: StockMongoEntity[]) => {
+        return stocks.filter((stock: StockMongoEntity) => {
+          return stock.product._id === productId;
+        });
+      }),
+    );
   }
 
-  findAll(): Observable<StockMongoEntity[]> {
-    return this.stockMongoRepository.findAll();
+  findAllByLocationId(locationId: string): Observable<StockMongoEntity[]> {
+    return this.stockMongoRepository.findAll().pipe(
+      map((stocks: StockMongoEntity[]) => {
+        return stocks.filter((stock: StockMongoEntity) => {
+          return stock.locationId === locationId;
+        });
+      }),
+    );
   }
 
   findOneById(entityId: string): Observable<StockMongoEntity> {

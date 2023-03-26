@@ -1,6 +1,9 @@
-import { Observable } from 'rxjs';
-import { InventoryMovementMongoRepository } from '../repositories';
-import { InventoryMovementMongoEntity } from '../schemas';
+import { Observable, from, map, switchMap } from 'rxjs';
+import {
+  InventoryMovementMongoRepository,
+  StockMongoRepository,
+} from '../repositories';
+import { InventoryMovementMongoEntity, StockMongoEntity } from '../schemas';
 import { Injectable } from '@nestjs/common';
 import { IInventoryMovementDomainService } from 'apps/inventory/src/domain/services';
 
@@ -10,27 +13,34 @@ export class InventoryMovementMongoService
 {
   constructor(
     private readonly inventoryMovementMongoRepository: InventoryMovementMongoRepository,
+    private readonly stockMongoRepository: StockMongoRepository,
   ) {}
-
   create(
+    stockId: string,
     entity: InventoryMovementMongoEntity,
   ): Observable<InventoryMovementMongoEntity> {
-    return this.inventoryMovementMongoRepository.create(entity);
+    return from(this.stockMongoRepository.findOneById(stockId)).pipe(
+      switchMap((stock: StockMongoEntity) => {
+        return this.inventoryMovementMongoRepository.create({
+          ...entity,
+          stock,
+        });
+      }),
+    );
   }
 
-  update(
-    entityId: string,
-    entity: InventoryMovementMongoEntity,
-  ): Observable<InventoryMovementMongoEntity> {
-    return this.inventoryMovementMongoRepository.update(entityId, entity);
-  }
-
-  delete(entityId: string): Observable<InventoryMovementMongoEntity> {
-    return this.inventoryMovementMongoRepository.delete(entityId);
-  }
-
-  findAll(): Observable<InventoryMovementMongoEntity[]> {
-    return this.inventoryMovementMongoRepository.findAll();
+  findAllByStockId(
+    stockId: string,
+  ): Observable<InventoryMovementMongoEntity[]> {
+    return this.inventoryMovementMongoRepository.findAll().pipe(
+      map((inventoryMovements: InventoryMovementMongoEntity[]) => {
+        return inventoryMovements.filter(
+          (inventoryMovement: InventoryMovementMongoEntity) => {
+            return inventoryMovement.stock._id === stockId;
+          },
+        );
+      }),
+    );
   }
 
   findOneById(entityId: string): Observable<InventoryMovementMongoEntity> {

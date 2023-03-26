@@ -44,9 +44,7 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
   delete(entityId: string): Observable<StockMongoEntity> {
     return this.findOneById(entityId).pipe(
       switchMap((entity: StockMongoEntity) => {
-        return from(this.stockMongoEntity.remove(entity)).pipe(
-          map((entity: StockMongoEntity) => entity),
-        );
+        return from(this.stockMongoEntity.remove(entity));
       }),
     );
   }

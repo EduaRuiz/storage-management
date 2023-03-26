@@ -6,6 +6,7 @@ import {
 } from '../persistance/services/';
 import { ConfigService } from '@nestjs/config';
 import { StockEntity } from '../persistance/entities/stock.entity';
+import { InventoryMovementEntity } from '../persistance/entities/inventory-movement.entity';
 
 @Controller('inventory')
 export class InventoryController {
@@ -23,12 +24,12 @@ export class InventoryController {
 
   @Get()
   getProducts() {
-    // return this.productService.create({
-    //   _id: '641df4a57478d16e7cba9b0a',
-    //   name: 'test',
-    //   description: 'test',
-    //   price: 1,
-    // });
+    return this.productService.create({
+      _id: '641df4a57478d16e7cba9b0a',
+      name: 'test',
+      description: 'test',
+      price: 1,
+    });
     // return this.productService.findAll();
     // return this.productService.findOneById('641df4a57478d16e7cba9b0a');
     // return this.stockService.create({
@@ -43,11 +44,9 @@ export class InventoryController {
     //     price: 1,
     //   },
     // });
-    return this.inventoryMovementService.create({
-      quantity: 1,
-      typeMovement: 'IN',
-      dateTime: new Date(),
-      stock: { quantity: 4 } as unknown as StockEntity,
-    });
+    // return this.inventoryMovementService.create(
+    //   '',
+    //   {} as InventoryMovementEntity,
+    // );
   }
 }
