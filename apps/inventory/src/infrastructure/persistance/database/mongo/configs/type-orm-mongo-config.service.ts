@@ -10,12 +10,12 @@ export class TypeOrmMongoConfigService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: 'mongodb',
-      // name: 'mongo',
       host: this.configService.get<string>('MONGO_DB_HOST'),
       port: this.configService.get<number>('MONGO_DB_PORT'),
-      // username: this.configService.get<string>('MONGO_DB_USER'),
-      // password: this.configService.get<string>('MONGO_DB_PASSWORD'),
+      username: this.configService.get<string>('MONGO_DB_USER'),
+      password: this.configService.get<string>('MONGO_DB_PASSWORD'),
       database: this.configService.get<string>('MONGO_DB_NAME_INVENTORY'),
+      authSource: this.configService.get<string>('MONGO_DB_AUTH_SOURCE'),
       entities: [
         ProductMongoEntity,
         StockMongoEntity,

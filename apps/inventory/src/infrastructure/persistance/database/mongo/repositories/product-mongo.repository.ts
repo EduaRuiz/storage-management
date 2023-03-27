@@ -34,13 +34,13 @@ export class ProductMongoRepository
     entityId: string,
     entity: ProductMongoEntity,
   ): Observable<ProductMongoEntity> {
-    this.findOneById(entityId).pipe(
-      map((currentEntity: ProductMongoEntity) => {
+    return this.findOneById(entityId).pipe(
+      switchMap((currentEntity: ProductMongoEntity) => {
         currentEntity = { ...currentEntity, ...entity, _id: entityId };
         entity = currentEntity;
+        return this.productMongoEntity.save(entity);
       }),
     );
-    return from(this.productMongoEntity.save(entity));
   }
 
   delete(entityId: string): Observable<ProductMongoEntity> {

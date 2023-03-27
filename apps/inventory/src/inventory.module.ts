@@ -3,6 +3,7 @@ import { InventoryController } from './infrastructure/controllers';
 import { PersistenceModule } from './infrastructure/persistance';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'node:path';
+import { MessagingModule } from './infrastructure/messaging';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { join } from 'node:path';
       ),
     }),
     PersistenceModule,
+    MessagingModule,
   ],
   controllers: [InventoryController],
   providers: [],

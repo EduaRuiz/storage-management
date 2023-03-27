@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { v4 as uuid } from 'uuid';
 import { ProductMongoRepository } from '../repositories/product-mongo.repository';
 import { ProductMongoEntity } from '../schemas';
 import { IProductDomainService } from 'apps/inventory/src/domain/services';

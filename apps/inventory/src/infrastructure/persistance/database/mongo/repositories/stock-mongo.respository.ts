@@ -32,13 +32,17 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
     entityId: string,
     entity: StockMongoEntity,
   ): Observable<StockMongoEntity> {
-    this.findOneById(entityId).pipe(
-      map((currentEntity: StockMongoEntity) => {
+    return this.findOneById(entityId).pipe(
+      switchMap((currentEntity: StockMongoEntity) => {
         currentEntity = { ...currentEntity, ...entity, _id: entityId };
         entity = currentEntity;
+        return from(this.stockMongoEntity.save(entity)).pipe(
+          catchError((error: Error) => {
+            throw new ConflictException(error.message);
+          }),
+        );
       }),
     );
-    return from(this.stockMongoEntity.save(entity));
   }
 
   delete(entityId: string): Observable<StockMongoEntity> {

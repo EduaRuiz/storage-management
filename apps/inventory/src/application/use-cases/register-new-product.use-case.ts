@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { ProductDomainEntity } from '../../domain/entities';
 import { RegisteredNewProductDomainEvent } from '../../domain/events/publishers';
 import { IProductDomainService } from '../../domain/services';
+import { INewProductDomainDto } from '../../domain/dto';
 
 export class RegisterNewProductUseCase {
   constructor(
@@ -9,8 +10,10 @@ export class RegisterNewProductUseCase {
     private readonly registeredNewProductDomainEvent: RegisteredNewProductDomainEvent,
   ) {}
 
-  execute(product: ProductDomainEntity): Observable<ProductDomainEntity> {
-    this.registeredNewProductDomainEvent.publish(product);
-    return this.productRepository.create(product);
+  execute(
+    newProductDto: INewProductDomainDto,
+  ): Observable<ProductDomainEntity> {
+    this.registeredNewProductDomainEvent.publish(newProductDto);
+    return this.productRepository.create(newProductDto);
   }
 }
