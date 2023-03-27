@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   InventoryMovementService,
   ProductService,
@@ -10,6 +18,7 @@ import {
   GetStocksByProductUseCase,
   RegisterInventoryMovementUseCase,
   RegisterNewProductUseCase,
+  RemoveProductUseCase,
   UpdateProductInfoUseCase,
 } from '../../application/use-cases';
 import {
@@ -22,6 +31,7 @@ import {
   GotStocksByProductPublisher,
   RegisteredInventoryMovementPublisher,
   RegisteredNewProductPublisher,
+  RemovedProductPublisher,
   UpdatedProductInfoPublisher,
 } from '../messaging/publishers';
 
@@ -36,6 +46,7 @@ export class InventoryController {
     private readonly inventoryMovementService: InventoryMovementService,
     private readonly registeredInventoryMovementPublisher: RegisteredInventoryMovementPublisher,
     private readonly gotInventoryMovementByProductPublisher: GotInventoryMovementByProductPublisher,
+    private readonly removedProductPublisher: RemovedProductPublisher,
   ) {}
 
   @Post('product/create')
@@ -47,7 +58,7 @@ export class InventoryController {
     return newProduct.execute(product);
   }
 
-  @Post('product/update/:id')
+  @Put('product/update/:id')
   updateProduct(
     @Param('id') productId: string,
     @Body() product: UpdateProductDto,
@@ -96,30 +107,12 @@ export class InventoryController {
     return inventoryMovements.execute(productId);
   }
 
-  // @Get()
-  // getProducts() {
-  // return this.productService.create({
-  //   _id: '641df4a57478d16e7cba9b0a',
-  //   name: 'test',
-  //   description: 'test',
-  //   price: 1,
-  // });
-  // return this.productService.findAll();
-  // return this.productService.findOneById('641df4a57478d16e7cba9b0a');
-  // return this.stockService.create({
-  //   _id: '641df4a57478d16e7cba9b0a',
-  //   quantity: 1,
-  //   dateTime: new Date(),
-  //   locationId: '641df4a57478d16e7cba9b0a',
-  //   product: {
-  //     _id: '641df4a57478d16e7cba9b0a',
-  //     name: 'test',
-  //     description: 'test',
-  //     price: 1,
-  //   },
-  // });
-  // return this.inventoryMovementService.create(
-  //   '',
-  //   {} as InventoryMovementEntity,
-  // );
+  @Delete('product/:id')
+  deleteProduct(@Param('id') productId: string) {
+    const removeProductUseCase = new RemoveProductUseCase(
+      this.productService,
+      this.removedProductPublisher,
+    );
+    return removeProductUseCase.execute(productId);
+  }
 }

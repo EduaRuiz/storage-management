@@ -6,6 +6,7 @@ import {
   GotStocksByProductPublisher,
   RegisteredInventoryMovementPublisher,
   RegisteredNewProductPublisher,
+  RemovedProductPublisher,
   UpdatedProductInfoPublisher,
 } from './publishers';
 
@@ -37,6 +38,7 @@ import {
     GotProductInfoPublisher,
     GotInventoryMovementByProductPublisher,
     GotStocksByProductPublisher,
+    RemovedProductPublisher,
   ],
   exports: [
     RegisteredNewProductPublisher,
@@ -45,6 +47,7 @@ import {
     GotProductInfoPublisher,
     GotInventoryMovementByProductPublisher,
     GotStocksByProductPublisher,
+    RemovedProductPublisher,
   ],
 })
 export class MessagingModule {}

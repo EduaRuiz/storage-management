@@ -7,7 +7,7 @@ export class StockMongoEntity implements StockDomainEntity {
   @ObjectIdColumn()
   _id?: string;
 
-  @Column((type) => ProductMongoEntity)
+  @Column()
   product: ProductMongoEntity;
 
   @Column()
