@@ -6,5 +6,6 @@ export interface IInventoryMovementDomainService<
 > {
   create(stockId: string, entity: Entity): Observable<Entity>;
   findAllByStockId(stockId: string): Observable<Entity[]>;
+  findAllByProductId(productId: string): Observable<Entity[]>;
   findOneById(entityId: string): Observable<Entity>;
 }

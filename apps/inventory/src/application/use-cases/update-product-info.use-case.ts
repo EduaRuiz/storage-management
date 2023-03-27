@@ -1,7 +1,7 @@
 import { IProductDomainService } from '../../domain/services';
 import { UpdatedProductInfoDomainEvent } from '../../domain/events/publishers';
 import { IUpdateProductDomainDto } from '../../domain/dto';
-import { Observable, map, switchMap, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { ProductDomainEntity } from '../../domain/entities';
 
 export class UpdateProductInfoUseCase {

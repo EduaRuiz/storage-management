@@ -4,11 +4,10 @@ import {
   ProductService,
   StockService,
 } from '../persistance/services/';
-import { ConfigService } from '@nestjs/config';
-import { StockEntity } from '../persistance/entities/stock.entity';
-import { InventoryMovementEntity } from '../persistance/entities/inventory-movement.entity';
 import {
+  GetInventoryMovementsByProductUseCase,
   GetProductInfoUseCase,
+  GetStocksByProductUseCase,
   RegisterInventoryMovementUseCase,
   RegisterNewProductUseCase,
   UpdateProductInfoUseCase,
@@ -19,6 +18,8 @@ import {
   UpdateProductDto,
 } from '../utils/dtos';
 import {
+  GotInventoryMovementByProductPublisher,
+  GotStocksByProductPublisher,
   RegisteredInventoryMovementPublisher,
   RegisteredNewProductPublisher,
   UpdatedProductInfoPublisher,
@@ -31,9 +32,10 @@ export class InventoryController {
     private readonly registeredNewProductPublisher: RegisteredNewProductPublisher,
     private readonly updatedProductInfoPublisher: UpdatedProductInfoPublisher,
     private readonly stockService: StockService,
+    private readonly gotStocksByProductPublisher: GotStocksByProductPublisher,
     private readonly inventoryMovementService: InventoryMovementService,
     private readonly registeredInventoryMovementPublisher: RegisteredInventoryMovementPublisher,
-    private readonly configService: ConfigService,
+    private readonly gotInventoryMovementByProductPublisher: GotInventoryMovementByProductPublisher,
   ) {}
 
   @Post('product/create')
@@ -66,7 +68,7 @@ export class InventoryController {
     return newProduct.execute(productId);
   }
 
-  @Post('movement')
+  @Post('movement/register')
   registerInventoryMovement(@Body() movement: InventoryMovementDto) {
     const registerInventoryMovement = new RegisterInventoryMovementUseCase(
       this.inventoryMovementService,
@@ -74,6 +76,24 @@ export class InventoryController {
       this.registeredInventoryMovementPublisher,
     );
     return registerInventoryMovement.execute(movement);
+  }
+
+  @Get('inventory-movements/product/:id')
+  getInventoryMovementsByProduct(@Param('id') productId: string) {
+    const inventoryMovements = new GetInventoryMovementsByProductUseCase(
+      this.inventoryMovementService,
+      this.gotInventoryMovementByProductPublisher,
+    );
+    return inventoryMovements.execute(productId);
+  }
+
+  @Get('stocks/product/:id')
+  getStocksByProduct(@Param('id') productId: string) {
+    const inventoryMovements = new GetStocksByProductUseCase(
+      this.stockService,
+      this.gotStocksByProductPublisher,
+    );
+    return inventoryMovements.execute(productId);
   }
 
   // @Get()

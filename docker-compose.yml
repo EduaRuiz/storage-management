@@ -28,7 +28,7 @@ services:
       - data-mongo:/data/db
 
   rabbitmq:
-    image: rabbitmq:latest
+    image: rabbitmq:3.6-management-alpine
     container_name: rabbitmq
     restart: always
     ports:
@@ -38,6 +38,7 @@ services:
       RABBITMQ_DEFAULT_USER: root
       RABBITMQ_DEFAULT_PASS: password
       RABBITMQ_DEFAULT_VHOST: /
+      AMQP_URL: amqp://rabbitmq?connection_attempts=5&retry_delay=5
     volumes:
       - data-rabbitmq:/var/lib/rabbitmq
 

@@ -21,7 +21,8 @@ export class StockMongoService
       map((stocks: StockMongoEntity[]) => {
         return stocks.find((stock: StockMongoEntity) => {
           return (
-            stock.product._id == productId && stock.locationId == locationId
+            stock.product._id.toString() === productId.toString() &&
+            stock.locationId.toString() === locationId.toString()
           );
         });
       }),
@@ -59,7 +60,7 @@ export class StockMongoService
     return this.stockMongoRepository.findAll().pipe(
       map((stocks: StockMongoEntity[]) => {
         return stocks.filter((stock: StockMongoEntity) => {
-          return stock.product._id === productId;
+          return stock.product._id.toString() === productId.toString();
         });
       }),
     );
@@ -69,7 +70,7 @@ export class StockMongoService
     return this.stockMongoRepository.findAll().pipe(
       map((stocks: StockMongoEntity[]) => {
         return stocks.filter((stock: StockMongoEntity) => {
-          return stock.locationId === locationId;
+          return stock.locationId.toString() === locationId.toString();
         });
       }),
     );

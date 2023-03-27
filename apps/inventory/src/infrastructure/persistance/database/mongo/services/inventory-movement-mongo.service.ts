@@ -15,6 +15,22 @@ export class InventoryMovementMongoService
     private readonly inventoryMovementMongoRepository: InventoryMovementMongoRepository,
     private readonly stockMongoRepository: StockMongoRepository,
   ) {}
+  findAllByProductId(
+    productId: string,
+  ): Observable<InventoryMovementMongoEntity[]> {
+    return this.inventoryMovementMongoRepository.findAll().pipe(
+      map((inventoryMovements: InventoryMovementMongoEntity[]) => {
+        return inventoryMovements.filter(
+          (inventoryMovement: InventoryMovementMongoEntity) => {
+            return (
+              inventoryMovement.stock.product._id.toString() ===
+              productId.toString()
+            );
+          },
+        );
+      }),
+    );
+  }
   create(
     stockId: string,
     entity: InventoryMovementMongoEntity,
@@ -36,7 +52,9 @@ export class InventoryMovementMongoService
       map((inventoryMovements: InventoryMovementMongoEntity[]) => {
         return inventoryMovements.filter(
           (inventoryMovement: InventoryMovementMongoEntity) => {
-            return inventoryMovement.stock._id === stockId;
+            return (
+              inventoryMovement.stock._id.toString() === stockId.toString()
+            );
           },
         );
       }),
