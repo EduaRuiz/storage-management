@@ -9,7 +9,7 @@ export class InventoryMovementMongoEntity
   @ObjectIdColumn()
   _id?: string;
 
-  @Column()
+  @Column((type) => StockMongoEntity)
   stock: StockMongoEntity;
 
   @Column()

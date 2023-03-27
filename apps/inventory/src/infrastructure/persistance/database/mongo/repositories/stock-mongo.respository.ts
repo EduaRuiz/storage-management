@@ -11,7 +11,7 @@ import {
 import { StockMongoEntity } from '../schemas/stock-mongo.entity';
 import { IRepositoryBase } from './interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
 export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
@@ -23,7 +23,7 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
   create(entity: StockMongoEntity): Observable<StockMongoEntity> {
     return from(this.stockMongoEntity.save(entity)).pipe(
       catchError((error: Error) => {
-        throw new ConflictException(error.message);
+        throw new ConflictException('Stock create conflict', error.message);
       }),
     );
   }
@@ -34,11 +34,10 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
   ): Observable<StockMongoEntity> {
     return this.findOneById(entityId).pipe(
       switchMap((currentEntity: StockMongoEntity) => {
-        currentEntity = { ...currentEntity, ...entity, _id: entityId };
-        entity = currentEntity;
+        entity = { ...currentEntity, ...entity, _id: currentEntity._id };
         return from(this.stockMongoEntity.save(entity)).pipe(
           catchError((error: Error) => {
-            throw new ConflictException(error.message);
+            throw new ConflictException('Stock update conflict', error.message);
           }),
         );
       }),
@@ -61,19 +60,24 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
     );
   }
 
+  findBy(
+    options: FindOptionsWhere<StockMongoEntity>,
+  ): Observable<StockMongoEntity[]> {
+    this.stockMongoEntity.findBy(options).then((data) => {
+      console.log(data);
+    });
+    return from(this.stockMongoEntity.findBy(options));
+  }
+
   findOneById(entityId: string): Observable<StockMongoEntity> {
-    return from(
-      this.stockMongoEntity.findOne({
-        where: { _id: entityId },
-      }),
-    ).pipe(
+    return from(this.stockMongoEntity.findOneById(entityId)).pipe(
       catchError((error: Error) => {
         throw new NotFoundException(error.message);
       }),
-      switchMap((product) =>
+      switchMap((product: StockMongoEntity) =>
         iif(
           () => product === null,
-          throwError(() => new NotFoundException('Product not found')),
+          throwError(() => new NotFoundException('Stock not found')),
           of(product),
         ),
       ),

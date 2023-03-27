@@ -1,9 +1,4 @@
-import {
-  IsDefined,
-  IsNumberString,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsDefined, IsPositive, IsString } from 'class-validator';
 
 export class NewProductDto {
   @IsString()

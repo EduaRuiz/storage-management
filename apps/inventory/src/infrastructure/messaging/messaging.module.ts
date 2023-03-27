@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { RegisteredNewProductPublisher } from './publishers';
+import {
+  RegisteredNewProductPublisher,
+  UpdatedProductInfoPublisher,
+} from './publishers';
 
 /**
  * Modulo de mensajería
@@ -23,7 +26,7 @@ import { RegisteredNewProductPublisher } from './publishers';
     ]),
   ],
   controllers: [],
-  providers: [RegisteredNewProductPublisher],
-  exports: [RegisteredNewProductPublisher],
+  providers: [RegisteredNewProductPublisher, UpdatedProductInfoPublisher],
+  exports: [RegisteredNewProductPublisher, UpdatedProductInfoPublisher],
 })
 export class MessagingModule {}

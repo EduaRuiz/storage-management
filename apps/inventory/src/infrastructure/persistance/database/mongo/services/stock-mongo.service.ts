@@ -1,5 +1,4 @@
 import { Observable, from, map, switchMap } from 'rxjs';
-import { v4 as uuid } from 'uuid';
 import { ProductMongoRepository, StockMongoRepository } from '../repositories';
 import { ProductMongoEntity, StockMongoEntity } from '../schemas';
 import { IStockDomainService } from 'apps/inventory/src/domain/services';
@@ -22,7 +21,7 @@ export class StockMongoService
       map((stocks: StockMongoEntity[]) => {
         return stocks.find((stock: StockMongoEntity) => {
           return (
-            stock.product._id === productId && stock.locationId === locationId
+            stock.product._id == productId && stock.locationId == locationId
           );
         });
       }),

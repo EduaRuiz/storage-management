@@ -24,9 +24,9 @@ export class RegisterInventoryMovementUseCase {
       }),
     );
     return currentStock.pipe(
-      switchMap((stock) => {
+      switchMap((stock: StockDomainEntity) => {
         return this.updateStock(stock, inventoryMovementDto).pipe(
-          switchMap((stock) => {
+          switchMap((stock: StockDomainEntity) => {
             return this.inventoryMovement$.create(stock._id, {
               quantity: inventoryMovementDto.quantity,
               typeMovement: inventoryMovementDto.typeMovement,

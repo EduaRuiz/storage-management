@@ -10,7 +10,7 @@ import {
 } from 'rxjs';
 import { IRepositoryBase } from './interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { InventoryMovementMongoEntity } from '../schemas';
 
@@ -21,6 +21,11 @@ export class InventoryMovementMongoRepository
     @InjectRepository(InventoryMovementMongoEntity)
     private inventoryMovementMongoEntity: Repository<InventoryMovementMongoEntity>,
   ) {}
+  findBy(
+    options: FindOptionsWhere<InventoryMovementMongoEntity>,
+  ): Observable<InventoryMovementMongoEntity[]> {
+    return from(this.inventoryMovementMongoEntity.findBy(options));
+  }
 
   create(
     entity: InventoryMovementMongoEntity,
@@ -64,18 +69,16 @@ export class InventoryMovementMongoRepository
   }
 
   findOneById(entityId: string): Observable<InventoryMovementMongoEntity> {
-    return from(
-      this.inventoryMovementMongoEntity.findOne({
-        where: { _id: entityId },
-      }),
-    ).pipe(
+    return from(this.inventoryMovementMongoEntity.findOneById(entityId)).pipe(
       catchError((error: Error) => {
         throw new NotFoundException(error.message);
       }),
-      switchMap((product) =>
+      switchMap((product: InventoryMovementMongoEntity) =>
         iif(
           () => product === null,
-          throwError(() => new NotFoundException('Product not found')),
+          throwError(
+            () => new NotFoundException('InventoryMovement not found'),
+          ),
           of(product),
         ),
       ),

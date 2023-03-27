@@ -1,25 +1,28 @@
 import {
   IsDefined,
-  IsNumberString,
   IsOptional,
   IsPositive,
   IsString,
-  IsUUID,
+  Matches,
 } from 'class-validator';
 
 export class UpdateProductDto {
   @IsOptional()
   @IsString()
-  @IsUUID()
+  @Matches(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i), {
+    message: 'ProductId is not valid',
+  })
   _id?: string;
+  @IsOptional()
   @IsString()
   @IsDefined()
-  name: string;
+  name?: string;
+  @IsOptional()
   @IsString()
   @IsDefined()
-  description: string;
+  description?: string;
+  @IsOptional()
   @IsDefined()
-  @IsNumberString()
   @IsPositive()
-  price: number;
+  price?: number;
 }

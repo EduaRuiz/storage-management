@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   InventoryMovementService,
   ProductService,
@@ -10,15 +10,24 @@ import { InventoryMovementEntity } from '../persistance/entities/inventory-movem
 import {
   RegisterInventoryMovementUseCase,
   RegisterNewProductUseCase,
+  UpdateProductInfoUseCase,
 } from '../../application/use-cases';
-import { InventoryMovementDto, NewProductDto } from '../utils/dtos';
-import { RegisteredNewProductPublisher } from '../messaging/publishers';
+import {
+  InventoryMovementDto,
+  NewProductDto,
+  UpdateProductDto,
+} from '../utils/dtos';
+import {
+  RegisteredNewProductPublisher,
+  UpdatedProductInfoPublisher,
+} from '../messaging/publishers';
 
 @Controller('inventory')
 export class InventoryController {
   constructor(
     private readonly productService: ProductService,
     private readonly registeredNewProductPublisher: RegisteredNewProductPublisher,
+    private readonly updatedProductInfoPublisher: UpdatedProductInfoPublisher,
     private readonly stockService: StockService,
     private readonly inventoryMovementService: InventoryMovementService,
     private readonly configService: ConfigService,
@@ -31,6 +40,18 @@ export class InventoryController {
       this.registeredNewProductPublisher,
     );
     return newProduct.execute(product);
+  }
+
+  @Post('product/update/:id')
+  updateProduct(
+    @Param('id') productId: string,
+    @Body() product: UpdateProductDto,
+  ) {
+    const newProduct = new UpdateProductInfoUseCase(
+      this.productService,
+      this.updatedProductInfoPublisher,
+    );
+    return newProduct.execute(productId, product);
   }
 
   @Post('movement')

@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductMongoEntity } from '../schemas/product-mongo.entity';
 import { IRepositoryBase } from './interfaces';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import {
   Observable,
   catchError,
@@ -22,10 +22,16 @@ export class ProductMongoRepository
     private productMongoEntity: Repository<ProductMongoEntity>,
   ) {}
 
+  findBy(
+    options: FindOptionsWhere<ProductMongoEntity>,
+  ): Observable<ProductMongoEntity[]> {
+    return from(this.productMongoEntity.findBy(options));
+  }
+
   create(entity: ProductMongoEntity): Observable<ProductMongoEntity> {
     return from(this.productMongoEntity.save(entity)).pipe(
       catchError((error: Error) => {
-        throw new ConflictException(error.message);
+        throw new ConflictException('Product create conflict', error.message);
       }),
     );
   }
@@ -36,9 +42,15 @@ export class ProductMongoRepository
   ): Observable<ProductMongoEntity> {
     return this.findOneById(entityId).pipe(
       switchMap((currentEntity: ProductMongoEntity) => {
-        currentEntity = { ...currentEntity, ...entity, _id: entityId };
-        entity = currentEntity;
-        return this.productMongoEntity.save(entity);
+        entity = { ...currentEntity, ...entity, _id: currentEntity._id };
+        return from(this.productMongoEntity.save(entity)).pipe(
+          catchError((error: Error) => {
+            throw new ConflictException(
+              'Product update conflict',
+              error.message,
+            );
+          }),
+        );
       }),
     );
   }
@@ -62,15 +74,11 @@ export class ProductMongoRepository
   }
 
   findOneById(entityId: string): Observable<ProductMongoEntity> {
-    return from(
-      this.productMongoEntity.findOne({
-        where: { _id: entityId },
-      }),
-    ).pipe(
+    return from(this.productMongoEntity.findOneById(entityId)).pipe(
       catchError((error: Error) => {
         throw new NotFoundException(error.message);
       }),
-      switchMap((product) =>
+      switchMap((product: ProductMongoEntity) =>
         iif(
           () => product === null,
           throwError(() => new NotFoundException('Product not found')),
