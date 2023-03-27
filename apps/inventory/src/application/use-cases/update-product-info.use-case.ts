@@ -1,7 +1,7 @@
 import { IProductDomainService } from '../../domain/services';
 import { UpdatedProductInfoDomainEvent } from '../../domain/events/publishers';
 import { IUpdateProductDomainDto } from '../../domain/dto';
-import { Observable, map, switchMap } from 'rxjs';
+import { Observable, map, switchMap, tap } from 'rxjs';
 import { ProductDomainEntity } from '../../domain/entities';
 
 export class UpdateProductInfoUseCase {
@@ -26,6 +26,10 @@ export class UpdateProductInfoUseCase {
     productId: string,
     product: ProductDomainEntity,
   ): Observable<ProductDomainEntity> {
-    return this.product$.update(productId, product);
+    return this.product$.update(productId, product).pipe(
+      tap((product: ProductDomainEntity) => {
+        this.updatedProductInfoDomainEvent.publish(product);
+      }),
+    );
   }
 }

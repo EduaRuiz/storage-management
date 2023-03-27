@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { StockEntity } from '../persistance/entities/stock.entity';
 import { InventoryMovementEntity } from '../persistance/entities/inventory-movement.entity';
 import {
+  GetProductInfoUseCase,
   RegisterInventoryMovementUseCase,
   RegisterNewProductUseCase,
   UpdateProductInfoUseCase,
@@ -18,6 +19,7 @@ import {
   UpdateProductDto,
 } from '../utils/dtos';
 import {
+  RegisteredInventoryMovementPublisher,
   RegisteredNewProductPublisher,
   UpdatedProductInfoPublisher,
 } from '../messaging/publishers';
@@ -30,6 +32,7 @@ export class InventoryController {
     private readonly updatedProductInfoPublisher: UpdatedProductInfoPublisher,
     private readonly stockService: StockService,
     private readonly inventoryMovementService: InventoryMovementService,
+    private readonly registeredInventoryMovementPublisher: RegisteredInventoryMovementPublisher,
     private readonly configService: ConfigService,
   ) {}
 
@@ -54,11 +57,21 @@ export class InventoryController {
     return newProduct.execute(productId, product);
   }
 
+  @Get('product/info/:id')
+  getProduct(@Param('id') productId: string) {
+    const newProduct = new GetProductInfoUseCase(
+      this.productService,
+      this.updatedProductInfoPublisher,
+    );
+    return newProduct.execute(productId);
+  }
+
   @Post('movement')
   registerInventoryMovement(@Body() movement: InventoryMovementDto) {
     const registerInventoryMovement = new RegisterInventoryMovementUseCase(
       this.inventoryMovementService,
       this.stockService,
+      this.registeredInventoryMovementPublisher,
     );
     return registerInventoryMovement.execute(movement);
   }

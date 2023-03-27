@@ -6,13 +6,15 @@ import {
   IInventoryMovementDomainService,
   IStockDomainService,
 } from '../../domain/services';
-import { Observable, of, switchMap } from 'rxjs';
+import { Observable, of, switchMap, tap } from 'rxjs';
 import { BadRequestException } from '@nestjs/common';
+import { RegisteredInventoryMovementDomainEvent } from '../../domain/events/publishers/registered-inventory-movement.domain-event';
 
 export class RegisterInventoryMovementUseCase {
   constructor(
     private readonly inventoryMovement$: IInventoryMovementDomainService,
     private readonly stock$: IStockDomainService,
+    private readonly registeredInventoryMovementDomainEvent: RegisteredInventoryMovementDomainEvent,
   ) {}
 
   execute(
@@ -27,11 +29,19 @@ export class RegisterInventoryMovementUseCase {
       switchMap((stock: StockDomainEntity) => {
         return this.updateStock(stock, inventoryMovementDto).pipe(
           switchMap((stock: StockDomainEntity) => {
-            return this.inventoryMovement$.create(stock._id, {
-              quantity: inventoryMovementDto.quantity,
-              typeMovement: inventoryMovementDto.typeMovement,
-              dateTime: new Date(),
-            });
+            return this.inventoryMovement$
+              .create(stock._id, {
+                quantity: inventoryMovementDto.quantity,
+                typeMovement: inventoryMovementDto.typeMovement,
+                dateTime: new Date(),
+              })
+              .pipe(
+                tap((inventoryMovement: InventoryMovementDomainEntity) => {
+                  this.registeredInventoryMovementDomainEvent.publish(
+                    inventoryMovement,
+                  );
+                }),
+              );
           }),
         );
       }),

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
+  GotProductInfoPublisher,
+  RegisteredInventoryMovementPublisher,
   RegisteredNewProductPublisher,
   UpdatedProductInfoPublisher,
 } from './publishers';
@@ -26,7 +28,17 @@ import {
     ]),
   ],
   controllers: [],
-  providers: [RegisteredNewProductPublisher, UpdatedProductInfoPublisher],
-  exports: [RegisteredNewProductPublisher, UpdatedProductInfoPublisher],
+  providers: [
+    RegisteredNewProductPublisher,
+    UpdatedProductInfoPublisher,
+    RegisteredInventoryMovementPublisher,
+    GotProductInfoPublisher,
+  ],
+  exports: [
+    RegisteredNewProductPublisher,
+    UpdatedProductInfoPublisher,
+    RegisteredInventoryMovementPublisher,
+    GotProductInfoPublisher,
+  ],
 })
 export class MessagingModule {}
