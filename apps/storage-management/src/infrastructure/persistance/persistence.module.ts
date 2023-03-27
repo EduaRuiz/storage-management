@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { PostgresModule } from './database/postgres/postgres.module';
 import { MongoModule } from './database/mongo/mongo.module';
 import {
-  InventoryMovementService,
-  ProductService,
+  InventoryTransferService,
+  LocationService,
   StockService,
 } from './services';
 
@@ -16,7 +16,7 @@ import {
 @Module({
   imports: [MongoModule, PostgresModule],
   controllers: [],
-  providers: [ProductService, StockService, InventoryMovementService],
-  exports: [ProductService, StockService, InventoryMovementService],
+  providers: [LocationService, StockService, InventoryTransferService],
+  exports: [LocationService, StockService, InventoryTransferService],
 })
 export class PersistenceModule {}

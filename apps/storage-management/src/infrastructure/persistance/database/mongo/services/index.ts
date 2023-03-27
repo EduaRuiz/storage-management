@@ -1,3 +1,3 @@
-export * from './inventory-movement-mongo.service';
-export * from './product-mongo.service';
+export * from './inventory-transfer-mongo.service';
+export * from './location-mongo.service';
 export * from './stock-mongo.service';

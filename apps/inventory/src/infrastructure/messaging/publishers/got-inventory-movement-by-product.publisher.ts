@@ -15,6 +15,9 @@ export class GotInventoryMovementByProductPublisher extends GotInventoryMovement
   publish(
     data: InventoryMovementEntity[],
   ): Observable<InventoryMovementEntity[]> {
-    return this.proxy.emit('updated-product-info', JSON.stringify(data));
+    return this.proxy.emit(
+      'got-inventory-movement-by-product',
+      JSON.stringify(data),
+    );
   }
 }

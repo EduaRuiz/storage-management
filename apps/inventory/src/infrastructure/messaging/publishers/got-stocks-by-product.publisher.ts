@@ -13,6 +13,6 @@ export class GotStocksByProductPublisher extends GotStocksByProductDomainEvent {
   }
 
   publish(data: StockEntity[]): Observable<StockEntity[]> {
-    return this.proxy.emit('updated-product-info', JSON.stringify(data));
+    return this.proxy.emit('got-stocks-by-product', JSON.stringify(data));
   }
 }

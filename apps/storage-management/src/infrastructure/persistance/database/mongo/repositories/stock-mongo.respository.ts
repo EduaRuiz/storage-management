@@ -8,20 +8,20 @@ import {
   switchMap,
   throwError,
 } from 'rxjs';
-import { StockMongoEntity } from '../schemas/stock-mongo.entity';
+import { StockMongoSchema } from '../schemas';
 import { IRepositoryBase } from './interfaces';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
-export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
+export class StockMongoRepository implements IRepositoryBase<StockMongoSchema> {
   constructor(
-    @InjectRepository(StockMongoEntity)
-    private stockMongoEntity: Repository<StockMongoEntity>,
+    @InjectModel(StockMongoSchema.name)
+    private stockMongoEntity: Model<StockMongoSchema>,
   ) {}
 
-  create(entity: StockMongoEntity): Observable<StockMongoEntity> {
-    return from(this.stockMongoEntity.save(entity)).pipe(
+  create(entity: StockMongoSchema): Observable<StockMongoSchema> {
+    return from(this.stockMongoEntity.create(entity)).pipe(
       catchError((error: Error) => {
         throw new ConflictException('Stock create conflict', error.message);
       }),
@@ -30,12 +30,12 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
 
   update(
     entityId: string,
-    entity: StockMongoEntity,
-  ): Observable<StockMongoEntity> {
+    entity: StockMongoSchema,
+  ): Observable<StockMongoSchema> {
     return this.findOneById(entityId).pipe(
-      switchMap((currentEntity: StockMongoEntity) => {
+      switchMap((currentEntity: StockMongoSchema) => {
         entity = { ...currentEntity, ...entity, _id: currentEntity._id };
-        return from(this.stockMongoEntity.save(entity)).pipe(
+        return from(this.stockMongoEntity.findOneAndUpdate(entity)).pipe(
           catchError((error: Error) => {
             throw new ConflictException('Stock update conflict', error.message);
           }),
@@ -44,37 +44,28 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
     );
   }
 
-  delete(entityId: string): Observable<StockMongoEntity> {
+  delete(entityId: string): Observable<StockMongoSchema> {
     return this.findOneById(entityId).pipe(
-      switchMap((entity: StockMongoEntity) => {
-        return from(this.stockMongoEntity.remove(entity));
+      switchMap((entity: StockMongoSchema) => {
+        return from(this.stockMongoEntity.findOneAndDelete(entity));
       }),
     );
   }
 
-  findAll(): Observable<StockMongoEntity[]> {
-    return from(this.stockMongoEntity.find()).pipe(
-      map((entities: StockMongoEntity[]) => {
+  findAll(): Observable<StockMongoSchema[]> {
+    return from(this.stockMongoEntity.find().exec()).pipe(
+      map((entities: StockMongoSchema[]) => {
         return entities;
       }),
     );
   }
 
-  findBy(
-    options: FindOptionsWhere<StockMongoEntity>,
-  ): Observable<StockMongoEntity[]> {
-    this.stockMongoEntity.findBy(options).then((data) => {
-      console.log(data);
-    });
-    return from(this.stockMongoEntity.findBy(options));
-  }
-
-  findOneById(entityId: string): Observable<StockMongoEntity> {
-    return from(this.stockMongoEntity.findOneById(entityId)).pipe(
+  findOneById(entityId: string): Observable<StockMongoSchema> {
+    return from(this.stockMongoEntity.findById(entityId)).pipe(
       catchError((error: Error) => {
         throw new NotFoundException(error.message);
       }),
-      switchMap((product: StockMongoEntity) =>
+      switchMap((product: StockMongoSchema) =>
         iif(
           () => product === null,
           throwError(() => new NotFoundException('Stock not found')),

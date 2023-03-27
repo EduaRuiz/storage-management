@@ -1,3 +1,3 @@
-import { StockMongoEntity } from '../database/mongo/schemas';
+import { StockMongoSchema } from '../database/mongo/schemas';
 
-export class StockEntity extends StockMongoEntity {}
+export class StockEntity extends StockMongoSchema {}

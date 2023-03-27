@@ -1,25 +1,19 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { MongooseConfigService, TypeOrmMongoConfigService } from './configs';
+import { MongooseConfigService } from './configs';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
-  InventoryMovementMongoSchema,
-  ProductMongoSchema,
+  InventoryTransferMongoSchema,
+  LocationMongoSchema,
   StockMongoSchema,
 } from './schemas';
 import {
-  InventoryMovementMongoEntity,
-  ProductMongoEntity,
-  StockMongoEntity,
-} from './schemas';
-import {
-  InventoryMovementMongoRepository,
-  ProductMongoRepository,
+  InventoryTransferMongoRepository,
+  LocationMongoRepository,
   StockMongoRepository,
 } from './repositories';
 import {
-  InventoryMovementMongoService,
-  ProductMongoService,
+  InventoryTransferMongoService,
+  LocationMongoService,
   StockMongoService,
 } from './services';
 
@@ -31,45 +25,35 @@ import {
  */
 @Module({
   imports: [
-    // MongooseModule.forRootAsync({
-    //   useClass: MongooseConfigService,
-    // }),
-    // MongooseModule.forFeature([
-    //   { name: ProductMongoSchema.name, schema: ProductMongoSchema },
-    //   { name: StockMongoSchema.name, schema: StockMongoSchema },
-    //   {
-    //     name: InventoryMovementMongoSchema.name,
-    //     schema: InventoryMovementMongoSchema,
-    //   },
-    // ]),
-    TypeOrmModule.forRootAsync({
-      useClass: TypeOrmMongoConfigService,
+    MongooseModule.forRootAsync({
+      useClass: MongooseConfigService,
     }),
-    TypeOrmModule.forFeature([
-      ProductMongoEntity,
-      StockMongoEntity,
-      InventoryMovementMongoEntity,
+    MongooseModule.forFeature([
+      { name: LocationMongoSchema.name, schema: LocationMongoSchema },
+      { name: StockMongoSchema.name, schema: StockMongoSchema },
+      {
+        name: InventoryTransferMongoSchema.name,
+        schema: InventoryTransferMongoSchema,
+      },
     ]),
   ],
   controllers: [],
   providers: [
     MongooseConfigService,
-    // TypeOrmMongoConfigService,
-    ProductMongoRepository,
-    ProductMongoService,
+    LocationMongoRepository,
+    LocationMongoService,
     StockMongoRepository,
     StockMongoService,
-    InventoryMovementMongoRepository,
-    InventoryMovementMongoService,
+    InventoryTransferMongoRepository,
+    InventoryTransferMongoService,
   ],
   exports: [
-    // TypeOrmMongoConfigService,
-    ProductMongoRepository,
-    ProductMongoService,
+    LocationMongoRepository,
+    LocationMongoService,
     StockMongoRepository,
     StockMongoService,
-    InventoryMovementMongoRepository,
-    InventoryMovementMongoService,
+    InventoryTransferMongoRepository,
+    InventoryTransferMongoService,
   ],
 })
 export class MongoModule {}

@@ -8,6 +8,13 @@ export class InventoryTransferMongoSchema
   implements InventoryTransferDomainModel
 {
   @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'InventoryTransferMongoSchema',
+    unique: true,
+  })
+  _id?: string;
+
+  @Prop({
     required: true,
     type: Number,
   })

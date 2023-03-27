@@ -6,6 +6,13 @@ import { LocationMongoSchema } from '.';
 @Schema({ collection: 'stock', versionKey: false })
 export class StockMongoSchema implements StockDomainModel {
   @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'StockMongoSchema',
+    unique: true,
+  })
+  _id?: string;
+
+  @Prop({
     required: true,
     type: Number,
   })
