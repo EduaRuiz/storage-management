@@ -17,7 +17,7 @@ export class InventoryMovementDomainEntity {
     this.quantity = quantity;
     this.typeMovement = typeMovement;
     this.dateTime = dateTime;
-    this._id = _id;
-    this.stock = stock;
+    _id && (this._id = _id);
+    stock && (this.stock = stock);
   }
 }

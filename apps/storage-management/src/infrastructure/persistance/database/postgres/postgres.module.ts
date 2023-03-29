@@ -4,10 +4,10 @@ import { Module } from '@nestjs/common';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      useClass: TypeOrmPostgresConfigService,
-    }),
-    TypeOrmModule.forFeature([]),
+    // TypeOrmModule.forRootAsync({
+    //   useClass: TypeOrmPostgresConfigService,
+    // }),
+    // TypeOrmModule.forFeature([]),
   ],
   controllers: [],
   providers: [],

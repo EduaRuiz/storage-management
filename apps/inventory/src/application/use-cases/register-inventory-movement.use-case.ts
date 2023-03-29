@@ -1,31 +1,44 @@
-import { IInventoryMovementDomainDto } from '../../domain/dto';
+import { IInventoryMovementDomainDto } from '../../domain/dtos';
 import { StockDomainEntity } from '../../domain/entities/stock.domain-entity';
 import { InventoryMovementDomainEntity } from '../../domain/entities';
 
 import {
   IInventoryMovementDomainService,
+  ILocationExistDomainService,
   IStockDomainService,
 } from '../../domain/services';
 import { Observable, of, switchMap, tap } from 'rxjs';
-import { BadRequestException } from '@nestjs/common';
-import { RegisteredInventoryMovementDomainEvent } from '../../domain/events/publishers/registered-inventory-movement.domain-event';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { RegisteredInventoryMovementDomainEvent } from '../../domain/events/publishers';
+import { catchError } from 'rxjs/operators';
 
 export class RegisterInventoryMovementUseCase {
   constructor(
     private readonly inventoryMovement$: IInventoryMovementDomainService,
     private readonly stock$: IStockDomainService,
+    private readonly locationExist$: ILocationExistDomainService,
     private readonly registeredInventoryMovementDomainEvent: RegisteredInventoryMovementDomainEvent,
   ) {}
 
   execute(
     inventoryMovementDto: IInventoryMovementDomainDto,
   ): Observable<InventoryMovementDomainEntity> {
-    const currentStock = this.getStock(inventoryMovementDto).pipe(
-      switchMap((stock: StockDomainEntity | null) => {
-        return this.stockLogic(stock, inventoryMovementDto);
-      }),
-    );
-    return currentStock.pipe(
+    const locationExists = this.locationExist$
+      .exist(inventoryMovementDto.locationId)
+      .pipe(
+        catchError((error) => {
+          throw new NotFoundException('Location not found', error.message);
+        }),
+        switchMap(() => {
+          return this.getStock(inventoryMovementDto).pipe(
+            switchMap((stock: StockDomainEntity | null) => {
+              return this.stockLogic(stock, inventoryMovementDto);
+            }),
+          );
+        }),
+      );
+
+    return locationExists.pipe(
       switchMap((stock: StockDomainEntity) => {
         return this.updateStock(stock, inventoryMovementDto).pipe(
           switchMap((stock: StockDomainEntity) => {

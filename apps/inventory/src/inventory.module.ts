@@ -4,6 +4,8 @@ import { PersistenceModule } from './infrastructure/persistance';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'node:path';
 import { MessagingModule } from './infrastructure/messaging';
+import { HttpModule } from '@nestjs/axios';
+import { LocationExistService } from './infrastructure/utils/services';
 
 @Module({
   imports: [
@@ -17,8 +19,9 @@ import { MessagingModule } from './infrastructure/messaging';
     }),
     PersistenceModule,
     MessagingModule,
+    HttpModule,
   ],
   controllers: [InventoryController],
-  providers: [],
+  providers: [LocationExistService],
 })
 export class InventoryModule {}

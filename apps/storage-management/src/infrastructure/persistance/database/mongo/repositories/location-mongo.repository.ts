@@ -8,22 +8,28 @@ import {
   map,
   of,
   switchMap,
+  tap,
   throwError,
 } from 'rxjs';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { mergeMap } from 'rxjs';
 
 export class LocationMongoRepository
   implements IRepositoryBase<LocationMongoSchema>
 {
   constructor(
     @InjectModel(LocationMongoSchema.name)
-    private productMongoEntity: Model<LocationMongoSchema>,
+    private locationMongoEntity: Model<LocationMongoSchema>,
   ) {}
 
   create(entity: LocationMongoSchema): Observable<LocationMongoSchema> {
-    return from(this.productMongoEntity.create(entity)).pipe(
+    return from(this.locationMongoEntity.create(entity)).pipe(
       catchError((error: Error) => {
         throw new ConflictException('Location create conflict', error.message);
       }),
@@ -35,9 +41,14 @@ export class LocationMongoRepository
     entity: LocationMongoSchema,
   ): Observable<LocationMongoSchema> {
     return this.findOneById(entityId).pipe(
-      switchMap((currentEntity: LocationMongoSchema) => {
-        entity = { ...currentEntity, ...entity, _id: currentEntity._id };
-        return from(this.productMongoEntity.findOneAndUpdate(entity)).pipe(
+      mergeMap(() => {
+        return from(
+          this.locationMongoEntity.findByIdAndUpdate(
+            { _id: entityId.toString() },
+            { ...entity, _id: entityId },
+            { new: true },
+          ),
+        ).pipe(
           catchError((error: Error) => {
             throw new ConflictException(
               'Location update conflict',
@@ -51,16 +62,19 @@ export class LocationMongoRepository
 
   delete(entityId: string): Observable<LocationMongoSchema> {
     return this.findOneById(entityId).pipe(
-      switchMap((entity: LocationMongoSchema) => {
-        return from(this.productMongoEntity.findByIdAndDelete(entity)).pipe(
-          map((entity: LocationMongoSchema) => entity),
-        );
+      tap(() => {
+        return from(
+          this.locationMongoEntity.findByIdAndDelete(
+            { _id: entityId.toString() },
+            { new: true },
+          ),
+        ).pipe(map((entity: LocationMongoSchema) => entity));
       }),
     );
   }
 
   findAll(): Observable<LocationMongoSchema[]> {
-    return from(this.productMongoEntity.find().exec()).pipe(
+    return from(this.locationMongoEntity.find().exec()).pipe(
       map((entities: LocationMongoSchema[]) => {
         return entities;
       }),
@@ -68,15 +82,20 @@ export class LocationMongoRepository
   }
 
   findOneById(entityId: string): Observable<LocationMongoSchema> {
-    return from(this.productMongoEntity.findById(entityId)).pipe(
+    return from(
+      this.locationMongoEntity.findById({ _id: entityId.toString() }),
+    ).pipe(
       catchError((error: Error) => {
-        throw new NotFoundException(error.message);
+        throw new BadRequestException(
+          'Location invalid ID format',
+          error.message,
+        );
       }),
-      switchMap((product: LocationMongoSchema) =>
+      switchMap((location: LocationMongoSchema) =>
         iif(
-          () => product === null,
+          () => location === null,
           throwError(() => new NotFoundException('Location not found')),
-          of(product),
+          of(location),
         ),
       ),
     );

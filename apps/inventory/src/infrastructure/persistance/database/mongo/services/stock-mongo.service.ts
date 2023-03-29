@@ -1,8 +1,8 @@
-import { Observable, from, map, switchMap } from 'rxjs';
+import { Observable, from, map, of, switchMap, throwError } from 'rxjs';
 import { ProductMongoRepository, StockMongoRepository } from '../repositories';
 import { ProductMongoEntity, StockMongoEntity } from '../schemas';
 import { IStockDomainService } from 'apps/inventory/src/domain/services';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class StockMongoService
@@ -14,17 +14,20 @@ export class StockMongoService
   ) {}
 
   findByProductIdAndLocationId(
-    productId: string,
     locationId: string,
+    productId: string,
   ): Observable<StockMongoEntity> {
     return this.stockMongoRepository.findAll().pipe(
-      map((stocks: StockMongoEntity[]) => {
-        return stocks.find((stock: StockMongoEntity) => {
+      switchMap((stocks: StockMongoEntity[]) => {
+        const stock = stocks.filter((stock: StockMongoEntity) => {
           return (
             stock.product._id.toString() === productId.toString() &&
             stock.locationId.toString() === locationId.toString()
           );
         });
+        return stock.length > 0
+          ? of(stock[0])
+          : throwError(() => new NotFoundException('Stock not found'));
       }),
     );
   }

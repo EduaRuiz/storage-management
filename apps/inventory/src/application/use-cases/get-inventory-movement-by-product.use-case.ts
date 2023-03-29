@@ -12,7 +12,9 @@ export class GetInventoryMovementsByProductUseCase {
   execute(productId: string): Observable<InventoryMovementDomainEntity[]> {
     return this.inventoryMovement$.findAllByProductId(productId).pipe(
       tap((inventoryMovements: InventoryMovementDomainEntity[]) => {
-        this.gotInventoryByProductDomainEvent.publish(inventoryMovements);
+        this.gotInventoryByProductDomainEvent
+          .publish(inventoryMovements)
+          .subscribe();
       }),
     );
   }

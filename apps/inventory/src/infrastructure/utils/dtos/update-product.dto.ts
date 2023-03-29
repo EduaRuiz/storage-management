@@ -1,3 +1,4 @@
+import { IUpdateProductDomainDto } from 'apps/inventory/src/domain/dtos';
 import {
   IsDefined,
   IsOptional,
@@ -6,7 +7,7 @@ import {
   Matches,
 } from 'class-validator';
 
-export class UpdateProductDto {
+export class UpdateProductDto implements IUpdateProductDomainDto {
   @IsOptional()
   @IsString()
   @Matches(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i), {

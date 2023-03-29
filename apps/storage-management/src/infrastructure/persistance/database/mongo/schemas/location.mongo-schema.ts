@@ -2,16 +2,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { LocationDomainModel } from 'apps/storage-management/src/domain/models';
 import mongoose, { HydratedDocument } from 'mongoose';
 
-@Schema({ collection: 'product', versionKey: false })
-export class LocationMongoSchema implements LocationDomainModel {
+@Schema({ collection: 'location', versionKey: false })
+export class LocationMongoSchema
+  extends mongoose.Document
+  implements LocationDomainModel
+{
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'LocationMongoSchema',
-    unique: true,
-  })
-  _id?: string;
-
-  @Prop({
+    name: 'name',
     required: true,
     unique: true,
     type: String,
@@ -19,16 +16,18 @@ export class LocationMongoSchema implements LocationDomainModel {
   name: string;
 
   @Prop({
+    name: 'description',
     required: true,
     type: String,
   })
   description: string;
 
   @Prop({
+    name: 'address',
     required: true,
     type: Object,
   })
-  location: { log: number; lat: number };
+  address: string;
 }
 
 export const LocationSchema = SchemaFactory.createForClass(LocationMongoSchema);

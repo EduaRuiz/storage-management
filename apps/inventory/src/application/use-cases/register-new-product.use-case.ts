@@ -1,19 +1,22 @@
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { ProductDomainEntity } from '../../domain/entities';
 import { RegisteredNewProductDomainEvent } from '../../domain/events/publishers';
 import { IProductDomainService } from '../../domain/services';
-import { INewProductDomainDto } from '../../domain/dto';
+import { INewProductDomainDto } from '../../domain/dtos';
 
 export class RegisterNewProductUseCase {
   constructor(
-    private readonly productRepository: IProductDomainService<ProductDomainEntity>,
+    private readonly product$: IProductDomainService,
     private readonly registeredNewProductDomainEvent: RegisteredNewProductDomainEvent,
   ) {}
 
   execute(
     newProductDto: INewProductDomainDto,
   ): Observable<ProductDomainEntity> {
-    this.registeredNewProductDomainEvent.publish(newProductDto);
-    return this.productRepository.create(newProductDto);
+    return this.product$.create(newProductDto).pipe(
+      tap((product: ProductDomainEntity) => {
+        this.registeredNewProductDomainEvent.publish(product);
+      }),
+    );
   }
 }

@@ -21,6 +21,7 @@
   "peacock.color": "#870b84",
   "jest.autoRun": "off",
   "cSpell.words": [
+    "dtos",
     "postgres"
   ]
 }

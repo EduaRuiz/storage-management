@@ -22,7 +22,7 @@ import {
         name: 'STORAGE_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://localhost:5672'],
+          urls: ['amqp://root:password@localhost:5672'],
           queue: 'storage_queue',
           queueOptions: { durable: false },
         },

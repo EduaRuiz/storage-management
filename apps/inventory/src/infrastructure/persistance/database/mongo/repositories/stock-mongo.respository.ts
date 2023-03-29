@@ -63,9 +63,6 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
   findBy(
     options: FindOptionsWhere<StockMongoEntity>,
   ): Observable<StockMongoEntity[]> {
-    this.stockMongoEntity.findBy(options).then((data) => {
-      console.log(data);
-    });
     return from(this.stockMongoEntity.findBy(options));
   }
 

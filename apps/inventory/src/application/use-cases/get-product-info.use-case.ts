@@ -12,7 +12,7 @@ export class GetProductInfoUseCase {
   execute(productId: string): Observable<ProductDomainEntity> {
     return this.product$.findOneById(productId).pipe(
       tap((product: ProductDomainEntity) => {
-        this.gotProductInfoDomainEvent.publish(product);
+        this.gotProductInfoDomainEvent.publish(product).subscribe();
       }),
     );
   }

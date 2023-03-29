@@ -3,8 +3,11 @@ import { MongooseConfigService } from './configs';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   InventoryTransferMongoSchema,
+  InventoryTransferSchema,
   LocationMongoSchema,
+  LocationSchema,
   StockMongoSchema,
+  StockSchema,
 } from './schemas';
 import {
   InventoryTransferMongoRepository,
@@ -16,6 +19,7 @@ import {
   LocationMongoService,
   StockMongoService,
 } from './services';
+import { ConfigModule } from '@nestjs/config';
 
 /**
  * Modulo de Mongo
@@ -25,15 +29,17 @@ import {
  */
 @Module({
   imports: [
-    MongooseModule.forRootAsync({
-      useClass: MongooseConfigService,
-    }),
+    // ConfigModule.forRoot(),
+    // MongooseModule.forRootAsync({
+    //   useClass: MongooseConfigService,
+    // }),
+    MongooseModule.forRoot('mongodb://localhost:27017/storage'),
     MongooseModule.forFeature([
-      { name: LocationMongoSchema.name, schema: LocationMongoSchema },
-      { name: StockMongoSchema.name, schema: StockMongoSchema },
+      { name: LocationMongoSchema.name, schema: LocationSchema },
+      { name: StockMongoSchema.name, schema: StockSchema },
       {
         name: InventoryTransferMongoSchema.name,
-        schema: InventoryTransferMongoSchema,
+        schema: InventoryTransferSchema,
       },
     ]),
   ],

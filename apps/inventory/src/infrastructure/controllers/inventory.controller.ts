@@ -28,22 +28,26 @@ import {
 } from '../utils/dtos';
 import {
   GotInventoryMovementByProductPublisher,
+  GotProductInfoPublisher,
   GotStocksByProductPublisher,
   RegisteredInventoryMovementPublisher,
   RegisteredNewProductPublisher,
   RemovedProductPublisher,
   UpdatedProductInfoPublisher,
 } from '../messaging/publishers';
+import { LocationExistService } from '../utils/services';
 
 @Controller('inventory')
 export class InventoryController {
   constructor(
     private readonly productService: ProductService,
+    private readonly stockService: StockService,
+    private readonly locationExistService: LocationExistService,
+    private readonly inventoryMovementService: InventoryMovementService,
     private readonly registeredNewProductPublisher: RegisteredNewProductPublisher,
     private readonly updatedProductInfoPublisher: UpdatedProductInfoPublisher,
-    private readonly stockService: StockService,
+    private readonly gotProductInfoPublisher: GotProductInfoPublisher,
     private readonly gotStocksByProductPublisher: GotStocksByProductPublisher,
-    private readonly inventoryMovementService: InventoryMovementService,
     private readonly registeredInventoryMovementPublisher: RegisteredInventoryMovementPublisher,
     private readonly gotInventoryMovementByProductPublisher: GotInventoryMovementByProductPublisher,
     private readonly removedProductPublisher: RemovedProductPublisher,
@@ -71,10 +75,10 @@ export class InventoryController {
   }
 
   @Get('product/info/:id')
-  getProduct(@Param('id') productId: string) {
+  getProductInfo(@Param('id') productId: string) {
     const newProduct = new GetProductInfoUseCase(
       this.productService,
-      this.updatedProductInfoPublisher,
+      this.gotProductInfoPublisher,
     );
     return newProduct.execute(productId);
   }
@@ -84,6 +88,7 @@ export class InventoryController {
     const registerInventoryMovement = new RegisterInventoryMovementUseCase(
       this.inventoryMovementService,
       this.stockService,
+      this.locationExistService,
       this.registeredInventoryMovementPublisher,
     );
     return registerInventoryMovement.execute(movement);

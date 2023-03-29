@@ -4,21 +4,19 @@ import { StockDomainModel } from '../../../../../domain/models';
 import { LocationMongoSchema } from '.';
 
 @Schema({ collection: 'stock', versionKey: false })
-export class StockMongoSchema implements StockDomainModel {
+export class StockMongoSchema
+  extends mongoose.Document
+  implements StockDomainModel
+{
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'StockMongoSchema',
-    unique: true,
-  })
-  _id?: string;
-
-  @Prop({
+    name: 'quantity',
     required: true,
     type: Number,
   })
   quantity: number;
 
   @Prop({
+    name: 'location',
     type: mongoose.Schema.Types.ObjectId,
     ref: 'LocationMongoSchema',
     required: true,
@@ -26,12 +24,15 @@ export class StockMongoSchema implements StockDomainModel {
   location: LocationMongoSchema;
 
   @Prop({
+    name: 'date-time',
     required: true,
     type: Date,
+    default: Date.now(),
   })
   dateTime: Date;
 
   @Prop({
+    name: 'product-id',
     required: true,
     type: String,
   })

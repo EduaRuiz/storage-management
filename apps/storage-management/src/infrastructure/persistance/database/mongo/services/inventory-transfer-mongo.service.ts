@@ -18,6 +18,8 @@ export class InventoryTransferMongoService
   generateTransfer(
     entity: InventoryTransferMongoSchema,
   ): Observable<InventoryTransferMongoSchema> {
+    entity.stockIn.quantity += entity.quantity;
+    entity.stockOut.quantity -= entity.quantity;
     return this.inventoryTransferMongoRepository.create(entity).pipe(
       tap(() => {
         this.stockMongoRepository
