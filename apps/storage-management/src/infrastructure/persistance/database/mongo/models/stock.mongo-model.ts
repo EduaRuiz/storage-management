@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { StockDomainModel } from '../../../../../domain/models';
-import { LocationMongoSchema } from '.';
+import { LocationMongoModel } from '.';
 
 @Schema({ collection: 'stock', versionKey: false })
-export class StockMongoSchema
+export class StockMongoModel
   extends mongoose.Document
   implements StockDomainModel
 {
@@ -18,10 +18,10 @@ export class StockMongoSchema
   @Prop({
     name: 'location',
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'LocationMongoSchema',
+    ref: 'LocationMongoModel',
     required: true,
   })
-  location: LocationMongoSchema;
+  location: LocationMongoModel;
 
   @Prop({
     name: 'date-time',
@@ -39,5 +39,5 @@ export class StockMongoSchema
   productId: string;
 }
 
-export const StockSchema = SchemaFactory.createForClass(StockMongoSchema);
-export type StockDocument = HydratedDocument<StockMongoSchema>;
+export const StockSchema = SchemaFactory.createForClass(StockMongoModel);
+export type StockDocument = HydratedDocument<StockMongoModel>;

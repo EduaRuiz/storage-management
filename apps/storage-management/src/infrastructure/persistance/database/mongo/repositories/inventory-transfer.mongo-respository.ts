@@ -15,21 +15,21 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { InventoryTransferMongoSchema } from '../schemas';
+import { InventoryTransferMongoModel } from '../models';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 export class InventoryTransferMongoRepository
-  implements IRepositoryBase<InventoryTransferMongoSchema>
+  implements IRepositoryBase<InventoryTransferMongoModel>
 {
   constructor(
-    @InjectModel(InventoryTransferMongoSchema.name)
-    private inventoryTransferMongoEntity: Model<InventoryTransferMongoSchema>,
+    @InjectModel(InventoryTransferMongoModel.name)
+    private inventoryTransferMongoEntity: Model<InventoryTransferMongoModel>,
   ) {}
 
   create(
-    entity: InventoryTransferMongoSchema,
-  ): Observable<InventoryTransferMongoSchema> {
+    entity: InventoryTransferMongoModel,
+  ): Observable<InventoryTransferMongoModel> {
     return from(this.inventoryTransferMongoEntity.create(entity)).pipe(
       catchError((error: Error) => {
         throw new ConflictException(
@@ -42,8 +42,8 @@ export class InventoryTransferMongoRepository
 
   update(
     entityId: string,
-    entity: InventoryTransferMongoSchema,
-  ): Observable<InventoryTransferMongoSchema> {
+    entity: InventoryTransferMongoModel,
+  ): Observable<InventoryTransferMongoModel> {
     return this.findOneById(entityId).pipe(
       tap(() => {
         return from(
@@ -59,30 +59,30 @@ export class InventoryTransferMongoRepository
               error.message,
             );
           }),
-          map((location: InventoryTransferMongoSchema) => location),
+          map((location: InventoryTransferMongoModel) => location),
         );
       }),
     );
   }
 
-  delete(entityId: string): Observable<InventoryTransferMongoSchema> {
+  delete(entityId: string): Observable<InventoryTransferMongoModel> {
     return this.findOneById(entityId).pipe(
-      switchMap((entity: InventoryTransferMongoSchema) => {
+      switchMap((entity: InventoryTransferMongoModel) => {
         entity.deleteOne({ _id: entityId });
         return of(entity);
       }),
     );
   }
 
-  findAll(): Observable<InventoryTransferMongoSchema[]> {
+  findAll(): Observable<InventoryTransferMongoModel[]> {
     return from(this.inventoryTransferMongoEntity.find().exec()).pipe(
-      map((entities: InventoryTransferMongoSchema[]) => {
+      map((entities: InventoryTransferMongoModel[]) => {
         return entities;
       }),
     );
   }
 
-  findOneById(entityId: string): Observable<InventoryTransferMongoSchema> {
+  findOneById(entityId: string): Observable<InventoryTransferMongoModel> {
     return from(
       this.inventoryTransferMongoEntity.findById(
         { _id: entityId.toString() },
@@ -96,7 +96,7 @@ export class InventoryTransferMongoRepository
           error.message,
         );
       }),
-      switchMap((product: InventoryTransferMongoSchema) =>
+      switchMap((product: InventoryTransferMongoModel) =>
         iif(
           () => product === null,
           throwError(

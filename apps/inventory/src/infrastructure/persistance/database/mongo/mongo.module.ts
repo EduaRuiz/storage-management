@@ -1,17 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { MongooseConfigService, TypeOrmMongoConfigService } from './configs';
+import { MongooseConfigService } from './configs';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
-  InventoryMovementMongoSchema,
-  ProductMongoSchema,
-  StockMongoSchema,
-} from './schemas';
-import {
-  InventoryMovementMongoEntity,
-  ProductMongoEntity,
-  StockMongoEntity,
-} from './schemas';
+  InventoryMovementMongoModel,
+  InventoryMovementSchema,
+  ProductMongoModel,
+  ProductSchema,
+  StockMongoModel,
+  StockSchema,
+} from './models';
 import {
   InventoryMovementMongoRepository,
   ProductMongoRepository,
@@ -31,24 +28,14 @@ import {
  */
 @Module({
   imports: [
-    // MongooseModule.forRootAsync({
-    //   useClass: MongooseConfigService,
-    // }),
-    // MongooseModule.forFeature([
-    //   { name: ProductMongoSchema.name, schema: ProductMongoSchema },
-    //   { name: StockMongoSchema.name, schema: StockMongoSchema },
-    //   {
-    //     name: InventoryMovementMongoSchema.name,
-    //     schema: InventoryMovementMongoSchema,
-    //   },
-    // ]),
-    TypeOrmModule.forRootAsync({
-      useClass: TypeOrmMongoConfigService,
-    }),
-    TypeOrmModule.forFeature([
-      ProductMongoEntity,
-      StockMongoEntity,
-      InventoryMovementMongoEntity,
+    MongooseModule.forRoot('mongodb://localhost:27017/inventory'),
+    MongooseModule.forFeature([
+      { name: ProductMongoModel.name, schema: ProductSchema },
+      { name: StockMongoModel.name, schema: StockSchema },
+      {
+        name: InventoryMovementMongoModel.name,
+        schema: InventoryMovementSchema,
+      },
     ]),
   ],
   controllers: [],

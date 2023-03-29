@@ -9,14 +9,12 @@ import {
   throwError,
 } from 'rxjs';
 import { LocationMongoRepository, StockMongoRepository } from '../repositories';
-import { StockMongoSchema } from '../schemas';
+import { StockMongoModel } from '../models';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { IStockDomainService } from 'apps/storage-management/src/domain/services';
 
 @Injectable()
-export class StockMongoService
-  implements IStockDomainService<StockMongoSchema>
-{
+export class StockMongoService implements IStockDomainService<StockMongoModel> {
   constructor(
     private readonly stockMongoRepository: StockMongoRepository,
     private readonly locationMongoRepository: LocationMongoRepository,
@@ -25,10 +23,10 @@ export class StockMongoService
   findOneByLocationIdAndProductId(
     locationId: string,
     productId: string,
-  ): Observable<StockMongoSchema> {
+  ): Observable<StockMongoModel> {
     return this.stockMongoRepository.findAll().pipe(
-      switchMap((stocks: StockMongoSchema[]) => {
-        const stock = stocks.filter((stock: StockMongoSchema) => {
+      switchMap((stocks: StockMongoModel[]) => {
+        const stock = stocks.filter((stock: StockMongoModel) => {
           return (
             stock.productId.toString() === productId.toString() &&
             stock.location._id.toString() === locationId.toString()
@@ -41,23 +39,23 @@ export class StockMongoService
     );
   }
 
-  createStock(entity: StockMongoSchema): Observable<StockMongoSchema> {
+  createStock(entity: StockMongoModel): Observable<StockMongoModel> {
     return this.stockMongoRepository.create(entity);
   }
 
   updateQuantity(
     entityId: string,
-    entity: StockMongoSchema,
-  ): Observable<StockMongoSchema> {
+    entity: StockMongoModel,
+  ): Observable<StockMongoModel> {
     return this.stockMongoRepository.findOneById(entityId).pipe(
-      mergeMap((stock: StockMongoSchema) => {
+      mergeMap((stock: StockMongoModel) => {
         stock.quantity = entity.quantity;
         return this.stockMongoRepository.update(entityId, stock);
       }),
     );
   }
 
-  findOneById(entityId: string): Observable<StockMongoSchema> {
+  findOneById(entityId: string): Observable<StockMongoModel> {
     return this.stockMongoRepository.findOneById(entityId);
   }
 }

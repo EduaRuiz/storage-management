@@ -1,5 +1,5 @@
 import { Observable, tap } from 'rxjs';
-import { ProductDomainEntity } from '../../domain/entities';
+import { ProductDomainModel } from '../../domain/models';
 import { GotProductInfoDomainEvent } from '../../domain/events/publishers';
 import { IProductDomainService } from '../../domain/services';
 
@@ -9,9 +9,9 @@ export class GetProductInfoUseCase {
     private readonly gotProductInfoDomainEvent: GotProductInfoDomainEvent,
   ) {}
 
-  execute(productId: string): Observable<ProductDomainEntity> {
+  execute(productId: string): Observable<ProductDomainModel> {
     return this.product$.findOneById(productId).pipe(
-      tap((product: ProductDomainEntity) => {
+      tap((product: ProductDomainModel) => {
         this.gotProductInfoDomainEvent.publish(product).subscribe();
       }),
     );

@@ -3,21 +3,21 @@ import {
   InventoryTransferMongoRepository,
   StockMongoRepository,
 } from '../repositories';
-import { InventoryTransferMongoSchema } from '../schemas';
+import { InventoryTransferMongoModel } from '../models';
 import { Injectable } from '@nestjs/common';
 import { IInventoryTransferDomainService } from 'apps/storage-management/src/domain/services';
 
 @Injectable()
 export class InventoryTransferMongoService
-  implements IInventoryTransferDomainService<InventoryTransferMongoSchema>
+  implements IInventoryTransferDomainService<InventoryTransferMongoModel>
 {
   constructor(
     private readonly inventoryTransferMongoRepository: InventoryTransferMongoRepository,
     private readonly stockMongoRepository: StockMongoRepository,
   ) {}
   generateTransfer(
-    entity: InventoryTransferMongoSchema,
-  ): Observable<InventoryTransferMongoSchema> {
+    entity: InventoryTransferMongoModel,
+  ): Observable<InventoryTransferMongoModel> {
     entity.stockIn.quantity += entity.quantity;
     entity.stockOut.quantity -= entity.quantity;
     return this.inventoryTransferMongoRepository.create(entity).pipe(
@@ -34,11 +34,11 @@ export class InventoryTransferMongoService
 
   getTransfersByProductId(
     productId: string,
-  ): Observable<InventoryTransferMongoSchema[]> {
+  ): Observable<InventoryTransferMongoModel[]> {
     return this.inventoryTransferMongoRepository.findAll().pipe(
-      map((entities: InventoryTransferMongoSchema[]) => {
+      map((entities: InventoryTransferMongoModel[]) => {
         return entities.filter(
-          (entity: InventoryTransferMongoSchema) =>
+          (entity: InventoryTransferMongoModel) =>
             entity.stockIn.productId === productId,
         );
       }),
@@ -47,11 +47,11 @@ export class InventoryTransferMongoService
 
   getTransfersByLocationId(
     locationId: string,
-  ): Observable<InventoryTransferMongoSchema[]> {
+  ): Observable<InventoryTransferMongoModel[]> {
     return this.inventoryTransferMongoRepository.findAll().pipe(
-      map((entities: InventoryTransferMongoSchema[]) => {
+      map((entities: InventoryTransferMongoModel[]) => {
         return entities.filter(
-          (entity: InventoryTransferMongoSchema) =>
+          (entity: InventoryTransferMongoModel) =>
             entity.stockIn.location._id === locationId ||
             entity.stockOut.location._id === locationId,
         );

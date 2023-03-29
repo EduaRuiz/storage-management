@@ -2,7 +2,7 @@ import { IProductDomainService } from '../../domain/services';
 import { UpdatedProductInfoDomainEvent } from '../../domain/events/publishers';
 import { IUpdateProductDomainDto } from '../../domain/dtos';
 import { Observable, switchMap, tap } from 'rxjs';
-import { ProductDomainEntity } from '../../domain/entities';
+import { ProductDomainModel } from '../../domain/models';
 
 export class UpdateProductInfoUseCase {
   constructor(
@@ -13,10 +13,10 @@ export class UpdateProductInfoUseCase {
   execute(
     productId: string,
     updateProductDto: IUpdateProductDomainDto,
-  ): Observable<ProductDomainEntity> {
+  ): Observable<ProductDomainModel> {
     return this.product$.findOneById(productId).pipe(
-      switchMap((product: ProductDomainEntity) => {
-        const entity: ProductDomainEntity = { ...product, ...updateProductDto };
+      switchMap((product: ProductDomainModel) => {
+        const entity: ProductDomainModel = { ...product, ...updateProductDto };
         return this.updateProductInfo(productId, entity);
       }),
     );
@@ -24,10 +24,10 @@ export class UpdateProductInfoUseCase {
 
   private updateProductInfo(
     productId: string,
-    product: ProductDomainEntity,
-  ): Observable<ProductDomainEntity> {
+    product: ProductDomainModel,
+  ): Observable<ProductDomainModel> {
     return this.product$.update(productId, product).pipe(
-      tap((product: ProductDomainEntity) => {
+      tap((product: ProductDomainModel) => {
         this.updatedProductInfoDomainEvent.publish(product).subscribe();
       }),
     );

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { LocationEntity } from '../../persistance/entities';
+import { LocationModel } from '../../persistance/models';
 import { Observable } from 'rxjs';
 import { UpdatedLocationInfoDomainEvent } from 'apps/storage-management/src/domain/events/publishers';
 
@@ -10,7 +10,7 @@ export class UpdatedLocationInfoPublisher extends UpdatedLocationInfoDomainEvent
     super();
   }
 
-  publish(data: LocationEntity): Observable<LocationEntity> {
+  publish(data: LocationModel): Observable<LocationModel> {
     return this.proxy.emit('updated-location-info', JSON.stringify(data));
   }
 }

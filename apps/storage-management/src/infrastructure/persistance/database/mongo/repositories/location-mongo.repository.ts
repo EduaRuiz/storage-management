@@ -1,4 +1,4 @@
-import { LocationMongoSchema } from '../schemas';
+import { LocationMongoModel } from '../models';
 import { IRepositoryBase } from './interfaces';
 import {
   Observable,
@@ -21,14 +21,14 @@ import { Model } from 'mongoose';
 import { mergeMap } from 'rxjs';
 
 export class LocationMongoRepository
-  implements IRepositoryBase<LocationMongoSchema>
+  implements IRepositoryBase<LocationMongoModel>
 {
   constructor(
-    @InjectModel(LocationMongoSchema.name)
-    private locationMongoEntity: Model<LocationMongoSchema>,
+    @InjectModel(LocationMongoModel.name)
+    private locationMongoEntity: Model<LocationMongoModel>,
   ) {}
 
-  create(entity: LocationMongoSchema): Observable<LocationMongoSchema> {
+  create(entity: LocationMongoModel): Observable<LocationMongoModel> {
     return from(this.locationMongoEntity.create(entity)).pipe(
       catchError((error: Error) => {
         throw new ConflictException('Location create conflict', error.message);
@@ -38,8 +38,8 @@ export class LocationMongoRepository
 
   update(
     entityId: string,
-    entity: LocationMongoSchema,
-  ): Observable<LocationMongoSchema> {
+    entity: LocationMongoModel,
+  ): Observable<LocationMongoModel> {
     return this.findOneById(entityId).pipe(
       mergeMap(() => {
         return from(
@@ -60,7 +60,7 @@ export class LocationMongoRepository
     );
   }
 
-  delete(entityId: string): Observable<LocationMongoSchema> {
+  delete(entityId: string): Observable<LocationMongoModel> {
     return this.findOneById(entityId).pipe(
       tap(() => {
         return from(
@@ -68,20 +68,20 @@ export class LocationMongoRepository
             { _id: entityId.toString() },
             { new: true },
           ),
-        ).pipe(map((entity: LocationMongoSchema) => entity));
+        ).pipe(map((entity: LocationMongoModel) => entity));
       }),
     );
   }
 
-  findAll(): Observable<LocationMongoSchema[]> {
+  findAll(): Observable<LocationMongoModel[]> {
     return from(this.locationMongoEntity.find().exec()).pipe(
-      map((entities: LocationMongoSchema[]) => {
+      map((entities: LocationMongoModel[]) => {
         return entities;
       }),
     );
   }
 
-  findOneById(entityId: string): Observable<LocationMongoSchema> {
+  findOneById(entityId: string): Observable<LocationMongoModel> {
     return from(
       this.locationMongoEntity.findById({ _id: entityId.toString() }),
     ).pipe(
@@ -91,7 +91,7 @@ export class LocationMongoRepository
           error.message,
         );
       }),
-      switchMap((location: LocationMongoSchema) =>
+      switchMap((location: LocationMongoModel) =>
         iif(
           () => location === null,
           throwError(() => new NotFoundException('Location not found')),

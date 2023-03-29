@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { StockEntity } from '../../persistance/entities';
+import { StockModel } from '../../persistance/models';
 import { Observable } from 'rxjs';
 import { GotStocksByProductDomainEvent } from 'apps/inventory/src/domain/events/publishers';
 
@@ -12,7 +12,7 @@ export class GotStocksByProductPublisher extends GotStocksByProductDomainEvent {
     super();
   }
 
-  publish(data: StockEntity[]): Observable<StockEntity[]> {
+  publish(data: StockModel[]): Observable<StockModel[]> {
     return this.proxy.emit('got-stocks-by-product', JSON.stringify(data));
   }
 }

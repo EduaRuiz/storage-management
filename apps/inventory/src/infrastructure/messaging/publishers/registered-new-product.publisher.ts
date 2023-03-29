@@ -1,8 +1,8 @@
 import { RegisteredNewProductDomainEvent } from 'apps/inventory/src/domain/events/publishers';
 import { Inject, Injectable } from '@nestjs/common';
-import { ProductDomainEntity } from 'apps/inventory/src/domain/entities';
+import { ProductDomainModel } from 'apps/inventory/src/domain/models';
 import { ClientProxy } from '@nestjs/microservices';
-import { ProductEntity } from '../../persistance/entities';
+import { ProductModel } from '../../persistance/models';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class RegisteredNewProductPublisher extends RegisteredNewProductDomainEve
     super();
   }
 
-  publish(data: ProductEntity): Observable<ProductEntity> {
+  publish(data: ProductModel): Observable<ProductModel> {
     return this.proxy.emit('registered-new-product', JSON.stringify(data));
   }
 }

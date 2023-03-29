@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
-import { InventoryMovementDomainEntity } from '../../entities';
+import { InventoryMovementDomainModel } from '../../models';
 
 export abstract class GotInventoryMovementByProductDomainEvent<
-  Response = InventoryMovementDomainEntity[],
+  Response = InventoryMovementDomainModel[],
 > {
   abstract publish(movements: Response): Observable<Response>;
 }

@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument, Document } from 'mongoose';
 import { StockDomainModel } from '../../../../../domain/models';
-import { ProductMongoSchema } from '.';
+import { ProductMongoModel } from '.';
 
 @Schema({ collection: 'stock', versionKey: false })
-export class StockMongoSchema implements StockDomainModel {
+export class StockMongoModel extends Document implements StockDomainModel {
   @Prop({
     required: true,
     type: Number,
@@ -25,11 +25,11 @@ export class StockMongoSchema implements StockDomainModel {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ProductMongoSchema',
+    ref: 'ProductMongoModel',
     required: true,
   })
-  product: ProductMongoSchema;
+  product: ProductMongoModel;
 }
 
-export const StockSchema = SchemaFactory.createForClass(StockMongoSchema);
-export type StockDocument = HydratedDocument<StockMongoSchema>;
+export const StockSchema = SchemaFactory.createForClass(StockMongoModel);
+export type StockDocument = HydratedDocument<StockMongoModel>;

@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
-import { StockDomainEntity } from '../entities';
+import { StockDomainModel } from '../models';
 
 export interface IStockDomainService<
-  Entity extends StockDomainEntity = StockDomainEntity,
+  Entity extends StockDomainModel = StockDomainModel,
 > {
-  createStock(productId: string, entity: Entity): Observable<Entity>;
+  createStock(entity: Entity): Observable<Entity>;
   updateQuantity(entityId: string, entity: Entity): Observable<Entity>;
   findAllByProductId(productId: string): Observable<Entity[]>;
   findAllByLocationId(locationId: string): Observable<Entity[]>;

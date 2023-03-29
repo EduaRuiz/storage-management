@@ -11,7 +11,7 @@ export class MongooseConfigService implements MongooseOptionsFactory {
   createMongooseOptions(): MongooseModuleOptions {
     return {
       // uri: 'mongodb://root:password@localhost:27017',
-      uri: 'mongodb://localhost:27017',
+      uri: 'mongodb://localhost:27017/storage',
       // authSource: 'admin',
       useNewUrlParser: true,
       useUnifiedTopology: true,

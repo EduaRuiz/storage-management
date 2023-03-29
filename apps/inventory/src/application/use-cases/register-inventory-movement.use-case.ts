@@ -1,6 +1,6 @@
 import { IInventoryMovementDomainDto } from '../../domain/dtos';
-import { StockDomainEntity } from '../../domain/entities/stock.domain-entity';
-import { InventoryMovementDomainEntity } from '../../domain/entities';
+import { StockDomainModel } from '../../domain/models';
+import { InventoryMovementDomainModel } from '../../domain/models';
 
 import {
   IInventoryMovementDomainService,
@@ -22,7 +22,7 @@ export class RegisterInventoryMovementUseCase {
 
   execute(
     inventoryMovementDto: IInventoryMovementDomainDto,
-  ): Observable<InventoryMovementDomainEntity> {
+  ): Observable<InventoryMovementDomainModel> {
     const locationExists = this.locationExist$
       .exist(inventoryMovementDto.locationId)
       .pipe(
@@ -31,7 +31,7 @@ export class RegisterInventoryMovementUseCase {
         }),
         switchMap(() => {
           return this.getStock(inventoryMovementDto).pipe(
-            switchMap((stock: StockDomainEntity | null) => {
+            switchMap((stock: StockDomainModel | null) => {
               return this.stockLogic(stock, inventoryMovementDto);
             }),
           );
@@ -39,17 +39,17 @@ export class RegisterInventoryMovementUseCase {
       );
 
     return locationExists.pipe(
-      switchMap((stock: StockDomainEntity) => {
+      switchMap((stock: StockDomainModel) => {
         return this.updateStock(stock, inventoryMovementDto).pipe(
-          switchMap((stock: StockDomainEntity) => {
+          switchMap((stock: StockDomainModel) => {
             return this.inventoryMovement$
-              .create(stock._id, {
+              .create({
                 quantity: inventoryMovementDto.quantity,
                 typeMovement: inventoryMovementDto.typeMovement,
                 dateTime: new Date(),
               })
               .pipe(
-                tap((inventoryMovement: InventoryMovementDomainEntity) => {
+                tap((inventoryMovement: InventoryMovementDomainModel) => {
                   this.registeredInventoryMovementDomainEvent.publish(
                     inventoryMovement,
                   );
@@ -63,7 +63,7 @@ export class RegisterInventoryMovementUseCase {
 
   private getStock(
     inventoryMovementDto: IInventoryMovementDomainDto,
-  ): Observable<StockDomainEntity> {
+  ): Observable<StockDomainModel> {
     return this.stock$.findByProductIdAndLocationId(
       inventoryMovementDto.productId,
       inventoryMovementDto.locationId,
@@ -72,8 +72,8 @@ export class RegisterInventoryMovementUseCase {
 
   private createStock(
     inventoryMovementDto: IInventoryMovementDomainDto,
-  ): Observable<StockDomainEntity> {
-    return this.stock$.createStock(inventoryMovementDto.productId, {
+  ): Observable<StockDomainModel> {
+    return this.stock$.createStock({
       quantity: inventoryMovementDto.quantity,
       locationId: inventoryMovementDto.locationId,
       dateTime: new Date(),
@@ -81,9 +81,9 @@ export class RegisterInventoryMovementUseCase {
   }
 
   private stockLogic(
-    stock: StockDomainEntity,
+    stock: StockDomainModel,
     inventoryMovementDto: IInventoryMovementDomainDto,
-  ): Observable<StockDomainEntity> {
+  ): Observable<StockDomainModel> {
     if (stock === null || stock === undefined) {
       if (inventoryMovementDto.typeMovement === 'OUT') {
         throw new BadRequestException('No stock to remove');
@@ -101,9 +101,9 @@ export class RegisterInventoryMovementUseCase {
   }
 
   private updateStock(
-    stock: StockDomainEntity,
+    stock: StockDomainModel,
     inventoryMovementDto: IInventoryMovementDomainDto,
-  ): Observable<StockDomainEntity> {
+  ): Observable<StockDomainModel> {
     if (inventoryMovementDto.typeMovement === 'IN') {
       stock.quantity += inventoryMovementDto.quantity;
     } else {

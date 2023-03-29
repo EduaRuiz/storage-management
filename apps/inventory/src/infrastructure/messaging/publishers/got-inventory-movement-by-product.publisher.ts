@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { InventoryMovementEntity } from '../../persistance/entities';
+import { InventoryMovementModel } from '../../persistance/models';
 import { Observable } from 'rxjs';
 import { GotInventoryMovementByProductDomainEvent } from 'apps/inventory/src/domain/events/publishers';
 
@@ -13,8 +13,8 @@ export class GotInventoryMovementByProductPublisher extends GotInventoryMovement
   }
 
   publish(
-    data: InventoryMovementEntity[],
-  ): Observable<InventoryMovementEntity[]> {
+    data: InventoryMovementModel[],
+  ): Observable<InventoryMovementModel[]> {
     return this.proxy.emit(
       'got-inventory-movement-by-product',
       JSON.stringify(data),

@@ -10,7 +10,7 @@ export class MongooseConfigService implements MongooseOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
   createMongooseOptions(): MongooseModuleOptions {
     return {
-      uri: 'mongodb://root:password@localhost:27017/inventory?authSource=admin',
+      uri: 'mongodb://localhost:27017/inventory',
       // authSource: 'admin',
       useNewUrlParser: true,
       useUnifiedTopology: true,

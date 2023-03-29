@@ -6,78 +6,101 @@ import {
   map,
   of,
   switchMap,
+  tap,
   throwError,
 } from 'rxjs';
 import { IRepositoryBase } from './interfaces';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
-import { ConflictException, NotFoundException } from '@nestjs/common';
-import { InventoryMovementMongoEntity } from '../schemas';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InventoryMovementMongoModel } from '../models';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 export class InventoryMovementMongoRepository
-  implements IRepositoryBase<InventoryMovementMongoEntity>
+  implements IRepositoryBase<InventoryMovementMongoModel>
 {
   constructor(
-    @InjectRepository(InventoryMovementMongoEntity)
-    private inventoryMovementMongoEntity: Repository<InventoryMovementMongoEntity>,
+    @InjectModel(InventoryMovementMongoModel.name)
+    private inventoryMovementMongoModel: Model<InventoryMovementMongoModel>,
   ) {}
-  findBy(
-    options: FindOptionsWhere<InventoryMovementMongoEntity>,
-  ): Observable<InventoryMovementMongoEntity[]> {
-    return from(this.inventoryMovementMongoEntity.findBy(options));
-  }
 
   create(
-    entity: InventoryMovementMongoEntity,
-  ): Observable<InventoryMovementMongoEntity> {
-    return from(this.inventoryMovementMongoEntity.save(entity)).pipe(
+    entity: InventoryMovementMongoModel,
+  ): Observable<InventoryMovementMongoModel> {
+    return from(this.inventoryMovementMongoModel.create(entity)).pipe(
       catchError((error: Error) => {
-        throw new ConflictException(error.message);
+        throw new ConflictException(
+          'Inventory movement create conflict',
+          error.message,
+        );
       }),
     );
   }
 
   update(
     entityId: string,
-    entity: InventoryMovementMongoEntity,
-  ): Observable<InventoryMovementMongoEntity> {
-    this.findOneById(entityId).pipe(
-      map((currentEntity: InventoryMovementMongoEntity) => {
-        currentEntity = { ...currentEntity, ...entity, _id: entityId };
-        entity = currentEntity;
-      }),
-    );
-    return from(this.inventoryMovementMongoEntity.save(entity));
-  }
-
-  delete(entityId: string): Observable<InventoryMovementMongoEntity> {
+    entity: InventoryMovementMongoModel,
+  ): Observable<InventoryMovementMongoModel> {
     return this.findOneById(entityId).pipe(
-      switchMap((entity: InventoryMovementMongoEntity) => {
-        return from(this.inventoryMovementMongoEntity.remove(entity)).pipe(
-          map((entity: InventoryMovementMongoEntity) => entity),
+      tap(() => {
+        return from(
+          this.inventoryMovementMongoModel.findByIdAndUpdate(
+            { _id: entityId.toString() },
+            { ...entity, _id: entityId },
+            { new: true, populate: 'stock' },
+          ),
+        ).pipe(
+          catchError((error: Error) => {
+            throw new ConflictException(
+              'Inventory movement update conflict',
+              error.message,
+            );
+          }),
+          map((location: InventoryMovementMongoModel) => location),
         );
       }),
     );
   }
 
-  findAll(): Observable<InventoryMovementMongoEntity[]> {
-    return from(this.inventoryMovementMongoEntity.find()).pipe(
-      map((entities: InventoryMovementMongoEntity[]) => {
+  delete(entityId: string): Observable<InventoryMovementMongoModel> {
+    return this.findOneById(entityId).pipe(
+      switchMap((entity: InventoryMovementMongoModel) => {
+        entity.deleteOne({ _id: entityId });
+        return of(entity);
+      }),
+    );
+  }
+
+  findAll(): Observable<InventoryMovementMongoModel[]> {
+    return from(this.inventoryMovementMongoModel.find().exec()).pipe(
+      map((entities: InventoryMovementMongoModel[]) => {
         return entities;
       }),
     );
   }
 
-  findOneById(entityId: string): Observable<InventoryMovementMongoEntity> {
-    return from(this.inventoryMovementMongoEntity.findOneById(entityId)).pipe(
+  findOneById(entityId: string): Observable<InventoryMovementMongoModel> {
+    return from(
+      this.inventoryMovementMongoModel.findById(
+        { _id: entityId.toString() },
+        {},
+        { populate: 'stock' },
+      ),
+    ).pipe(
       catchError((error: Error) => {
-        throw new NotFoundException(error.message);
+        throw new BadRequestException(
+          'Inventory movement invalid ID format',
+          error.message,
+        );
       }),
-      switchMap((product: InventoryMovementMongoEntity) =>
+      switchMap((product: InventoryMovementMongoModel) =>
         iif(
           () => product === null,
           throwError(
-            () => new NotFoundException('InventoryMovement not found'),
+            () => new NotFoundException('Inventory movement not found'),
           ),
           of(product),
         ),

@@ -1,5 +1,5 @@
 import { Observable, tap } from 'rxjs';
-import { StockDomainEntity } from '../../domain/entities';
+import { StockDomainModel } from '../../domain/models';
 import { GotStocksByProductDomainEvent } from '../../domain/events/publishers';
 import { IStockDomainService } from '../../domain/services';
 
@@ -9,9 +9,9 @@ export class GetStocksByProductUseCase {
     private readonly gotStockByProductDomainEvent: GotStocksByProductDomainEvent,
   ) {}
 
-  execute(productId: string): Observable<StockDomainEntity[]> {
+  execute(productId: string): Observable<StockDomainModel[]> {
     return this.stock$.findAllByProductId(productId).pipe(
-      tap((stocks: StockDomainEntity[]) => {
+      tap((stocks: StockDomainModel[]) => {
         this.gotStockByProductDomainEvent.publish(stocks);
       }),
     );

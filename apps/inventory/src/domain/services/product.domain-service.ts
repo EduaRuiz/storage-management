@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
-import { ProductDomainEntity } from '../entities';
+import { ProductDomainModel } from '../models';
 
 export interface IProductDomainService<
-  Entity extends ProductDomainEntity = ProductDomainEntity,
+  Entity extends ProductDomainModel = ProductDomainModel,
 > {
   create(entity: Entity): Observable<Entity>;
   update(entityId: string, entity: Entity): Observable<Entity>;

@@ -1,27 +1,28 @@
-import { Observable, from, map, switchMap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import {
   InventoryMovementMongoRepository,
   StockMongoRepository,
 } from '../repositories';
-import { InventoryMovementMongoEntity, StockMongoEntity } from '../schemas';
+import { InventoryMovementMongoModel } from '../models';
 import { Injectable } from '@nestjs/common';
 import { IInventoryMovementDomainService } from 'apps/inventory/src/domain/services';
 
 @Injectable()
 export class InventoryMovementMongoService
-  implements IInventoryMovementDomainService<InventoryMovementMongoEntity>
+  implements IInventoryMovementDomainService<InventoryMovementMongoModel>
 {
   constructor(
     private readonly inventoryMovementMongoRepository: InventoryMovementMongoRepository,
     private readonly stockMongoRepository: StockMongoRepository,
   ) {}
+
   findAllByProductId(
     productId: string,
-  ): Observable<InventoryMovementMongoEntity[]> {
+  ): Observable<InventoryMovementMongoModel[]> {
     return this.inventoryMovementMongoRepository.findAll().pipe(
-      map((inventoryMovements: InventoryMovementMongoEntity[]) => {
+      map((inventoryMovements: InventoryMovementMongoModel[]) => {
         return inventoryMovements.filter(
-          (inventoryMovement: InventoryMovementMongoEntity) => {
+          (inventoryMovement: InventoryMovementMongoModel) => {
             return (
               inventoryMovement.stock.product._id.toString() ===
               productId.toString()
@@ -31,27 +32,27 @@ export class InventoryMovementMongoService
       }),
     );
   }
+
   create(
-    stockId: string,
-    entity: InventoryMovementMongoEntity,
-  ): Observable<InventoryMovementMongoEntity> {
-    return from(this.stockMongoRepository.findOneById(stockId)).pipe(
-      switchMap((stock: StockMongoEntity) => {
-        return this.inventoryMovementMongoRepository.create({
-          ...entity,
-          stock,
-        });
+    entity: InventoryMovementMongoModel,
+  ): Observable<InventoryMovementMongoModel> {
+    return this.inventoryMovementMongoRepository.create(entity).pipe(
+      tap((inventoryMovement: InventoryMovementMongoModel) => {
+        inventoryMovement.typeMovement === 'IN'
+          ? (entity.stock.quantity += entity.quantity)
+          : (entity.stock.quantity -= entity.quantity);
+        this.stockMongoRepository
+          .update(entity.stock._id, entity.stock)
+          .subscribe();
       }),
     );
   }
 
-  findAllByStockId(
-    stockId: string,
-  ): Observable<InventoryMovementMongoEntity[]> {
+  findAllByStockId(stockId: string): Observable<InventoryMovementMongoModel[]> {
     return this.inventoryMovementMongoRepository.findAll().pipe(
-      map((inventoryMovements: InventoryMovementMongoEntity[]) => {
+      map((inventoryMovements: InventoryMovementMongoModel[]) => {
         return inventoryMovements.filter(
-          (inventoryMovement: InventoryMovementMongoEntity) => {
+          (inventoryMovement: InventoryMovementMongoModel) => {
             return (
               inventoryMovement.stock._id.toString() === stockId.toString()
             );
@@ -61,7 +62,7 @@ export class InventoryMovementMongoService
     );
   }
 
-  findOneById(entityId: string): Observable<InventoryMovementMongoEntity> {
+  findOneById(entityId: string): Observable<InventoryMovementMongoModel> {
     return this.inventoryMovementMongoRepository.findOneById(entityId);
   }
 }

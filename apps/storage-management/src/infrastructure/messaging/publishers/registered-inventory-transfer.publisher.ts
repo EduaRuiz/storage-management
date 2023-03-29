@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { InventoryTransferEntity } from '../../persistance/entities';
+import { InventoryTransferModel } from '../../persistance/models';
 import { Observable } from 'rxjs';
 import { RegisteredInventoryTransferDomainEvent } from 'apps/storage-management/src/domain/events/publishers';
 
@@ -10,7 +10,7 @@ export class RegisteredInventoryTransferPublisher extends RegisteredInventoryTra
     super();
   }
 
-  publish(data: InventoryTransferEntity): Observable<InventoryTransferEntity> {
+  publish(data: InventoryTransferModel): Observable<InventoryTransferModel> {
     return this.proxy.emit(
       'registered-inventory-transfer',
       JSON.stringify(data),

@@ -1,5 +1,5 @@
 import { Observable, tap } from 'rxjs';
-import { ProductDomainEntity } from '../../domain/entities';
+import { ProductDomainModel } from '../../domain/models';
 import { RegisteredNewProductDomainEvent } from '../../domain/events/publishers';
 import { IProductDomainService } from '../../domain/services';
 import { INewProductDomainDto } from '../../domain/dtos';
@@ -10,11 +10,9 @@ export class RegisterNewProductUseCase {
     private readonly registeredNewProductDomainEvent: RegisteredNewProductDomainEvent,
   ) {}
 
-  execute(
-    newProductDto: INewProductDomainDto,
-  ): Observable<ProductDomainEntity> {
+  execute(newProductDto: INewProductDomainDto): Observable<ProductDomainModel> {
     return this.product$.create(newProductDto).pipe(
-      tap((product: ProductDomainEntity) => {
+      tap((product: ProductDomainModel) => {
         this.registeredNewProductDomainEvent.publish(product);
       }),
     );

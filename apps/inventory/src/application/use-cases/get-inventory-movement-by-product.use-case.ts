@@ -1,7 +1,7 @@
 import { Observable, tap } from 'rxjs';
 import { GotInventoryMovementByProductDomainEvent } from '../../domain/events/publishers';
 import { IInventoryMovementDomainService } from '../../domain/services';
-import { InventoryMovementDomainEntity } from '../../domain/entities';
+import { InventoryMovementDomainModel } from '../../domain/models';
 
 export class GetInventoryMovementsByProductUseCase {
   constructor(
@@ -9,9 +9,9 @@ export class GetInventoryMovementsByProductUseCase {
     private readonly gotInventoryByProductDomainEvent: GotInventoryMovementByProductDomainEvent,
   ) {}
 
-  execute(productId: string): Observable<InventoryMovementDomainEntity[]> {
+  execute(productId: string): Observable<InventoryMovementDomainModel[]> {
     return this.inventoryMovement$.findAllByProductId(productId).pipe(
-      tap((inventoryMovements: InventoryMovementDomainEntity[]) => {
+      tap((inventoryMovements: InventoryMovementDomainModel[]) => {
         this.gotInventoryByProductDomainEvent
           .publish(inventoryMovements)
           .subscribe();

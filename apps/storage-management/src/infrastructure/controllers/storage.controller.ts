@@ -26,7 +26,7 @@ import {
   UpdatedLocationInfoPublisher,
   GotLocationInfoPublisher,
 } from '../messaging/publishers';
-import { LocationEntity } from '../persistance/entities';
+import { LocationModel } from '../persistance/models';
 import {
   GetLocationInfoUseCase,
   RegisterInventoryTransferUseCase,
@@ -81,11 +81,11 @@ export class StorageController {
   updateLocation(
     @Body() updateLocationDto: UpdateLocationDto,
     @Param('_id') locationId: string,
-  ): Observable<LocationEntity> {
+  ): Observable<LocationModel> {
     return this.locationService
-      .updateLocation(locationId, updateLocationDto as LocationEntity)
+      .updateLocation(locationId, updateLocationDto as LocationModel)
       .pipe(
-        tap((location: LocationEntity) => {
+        tap((location: LocationModel) => {
           this.updatedLocationInfoPublisher.publish(location);
         }),
       );

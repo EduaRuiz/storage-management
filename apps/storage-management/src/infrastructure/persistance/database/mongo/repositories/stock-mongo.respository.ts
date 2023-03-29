@@ -8,7 +8,7 @@ import {
   switchMap,
   throwError,
 } from 'rxjs';
-import { StockMongoSchema } from '../schemas';
+import { StockMongoModel } from '../models';
 import { IRepositoryBase } from './interfaces';
 import {
   ConflictException,
@@ -19,13 +19,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { mergeMap } from 'rxjs';
 
-export class StockMongoRepository implements IRepositoryBase<StockMongoSchema> {
+export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
   constructor(
-    @InjectModel(StockMongoSchema.name)
-    private stockMongoEntity: Model<StockMongoSchema>,
+    @InjectModel(StockMongoModel.name)
+    private stockMongoEntity: Model<StockMongoModel>,
   ) {}
 
-  create(entity: StockMongoSchema): Observable<StockMongoSchema> {
+  create(entity: StockMongoModel): Observable<StockMongoModel> {
     return from(this.stockMongoEntity.create(entity)).pipe(
       catchError((error: Error) => {
         throw new ConflictException('Stock create conflict', error.message);
@@ -35,8 +35,8 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoSchema> {
 
   update(
     entityId: string,
-    entity: StockMongoSchema,
-  ): Observable<StockMongoSchema> {
+    entity: StockMongoModel,
+  ): Observable<StockMongoModel> {
     return this.findOneById(entityId).pipe(
       mergeMap(() => {
         return from(
@@ -57,26 +57,26 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoSchema> {
     );
   }
 
-  delete(entityId: string): Observable<StockMongoSchema> {
+  delete(entityId: string): Observable<StockMongoModel> {
     return this.findOneById(entityId).pipe(
-      switchMap((entity: StockMongoSchema) => {
+      switchMap((entity: StockMongoModel) => {
         entity.deleteOne({ _id: entityId.toString() });
         return of(entity);
       }),
     );
   }
 
-  findAll(): Observable<StockMongoSchema[]> {
+  findAll(): Observable<StockMongoModel[]> {
     return from(
       this.stockMongoEntity.find({}, {}, { populate: 'location' }).exec(),
     ).pipe(
-      map((entities: StockMongoSchema[]) => {
+      map((entities: StockMongoModel[]) => {
         return entities;
       }),
     );
   }
 
-  findOneById(entityId: string): Observable<StockMongoSchema> {
+  findOneById(entityId: string): Observable<StockMongoModel> {
     return from(
       this.stockMongoEntity.findById(
         { _id: entityId.toString() },
@@ -87,7 +87,7 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoSchema> {
       catchError((error: Error) => {
         throw new BadRequestException('Stock invalid ID format', error.message);
       }),
-      switchMap((product: StockMongoSchema) =>
+      switchMap((product: StockMongoModel) =>
         iif(
           () => product === null,
           throwError(() => new NotFoundException('Stock not found')),

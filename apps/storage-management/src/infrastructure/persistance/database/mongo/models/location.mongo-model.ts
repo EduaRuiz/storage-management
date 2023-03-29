@@ -3,7 +3,7 @@ import { LocationDomainModel } from 'apps/storage-management/src/domain/models';
 import mongoose, { HydratedDocument } from 'mongoose';
 
 @Schema({ collection: 'location', versionKey: false })
-export class LocationMongoSchema
+export class LocationMongoModel
   extends mongoose.Document
   implements LocationDomainModel
 {
@@ -30,5 +30,5 @@ export class LocationMongoSchema
   address: string;
 }
 
-export const LocationSchema = SchemaFactory.createForClass(LocationMongoSchema);
-export type LocationDocument = HydratedDocument<LocationMongoSchema>;
+export const LocationSchema = SchemaFactory.createForClass(LocationMongoModel);
+export type LocationDocument = HydratedDocument<LocationMongoModel>;

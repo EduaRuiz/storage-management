@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ProductEntity } from '../../persistance/entities';
+import { ProductModel } from '../../persistance/models';
 import { Observable } from 'rxjs';
 import { UpdatedProductInfoDomainEvent } from 'apps/inventory/src/domain/events/publishers';
 
@@ -12,7 +12,7 @@ export class UpdatedProductInfoPublisher extends UpdatedProductInfoDomainEvent {
     super();
   }
 
-  publish(data: ProductEntity): Observable<ProductEntity> {
+  publish(data: ProductModel): Observable<ProductModel> {
     return this.proxy.emit('updated-product-info', JSON.stringify(data));
   }
 }

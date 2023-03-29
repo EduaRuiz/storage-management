@@ -4,24 +4,29 @@ import {
   from,
   iif,
   map,
+  mergeMap,
   of,
   switchMap,
   throwError,
 } from 'rxjs';
-import { StockMongoEntity } from '../schemas/stock-mongo.entity';
 import { IRepositoryBase } from './interfaces';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { StockMongoModel } from '../models';
 
-export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
+export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
   constructor(
-    @InjectRepository(StockMongoEntity)
-    private stockMongoEntity: Repository<StockMongoEntity>,
+    @InjectModel(StockMongoModel.name)
+    private stockMongoModel: Model<StockMongoModel>,
   ) {}
 
-  create(entity: StockMongoEntity): Observable<StockMongoEntity> {
-    return from(this.stockMongoEntity.save(entity)).pipe(
+  create(entity: StockMongoModel): Observable<StockMongoModel> {
+    return from(this.stockMongoModel.create(entity)).pipe(
       catchError((error: Error) => {
         throw new ConflictException('Stock create conflict', error.message);
       }),
@@ -30,48 +35,59 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoEntity> {
 
   update(
     entityId: string,
-    entity: StockMongoEntity,
-  ): Observable<StockMongoEntity> {
+    entity: StockMongoModel,
+  ): Observable<StockMongoModel> {
     return this.findOneById(entityId).pipe(
-      switchMap((currentEntity: StockMongoEntity) => {
-        entity = { ...currentEntity, ...entity, _id: currentEntity._id };
-        return from(this.stockMongoEntity.save(entity)).pipe(
+      mergeMap(() => {
+        return from(
+          this.stockMongoModel.findByIdAndUpdate(
+            { _id: entityId.toString() },
+            { ...entity, _id: entityId },
+            { new: true, populate: 'location' },
+          ),
+        ).pipe(
           catchError((error: Error) => {
-            throw new ConflictException('Stock update conflict', error.message);
+            throw new ConflictException(
+              'Location update conflict',
+              error.message,
+            );
           }),
         );
       }),
     );
   }
 
-  delete(entityId: string): Observable<StockMongoEntity> {
+  delete(entityId: string): Observable<StockMongoModel> {
     return this.findOneById(entityId).pipe(
-      switchMap((entity: StockMongoEntity) => {
-        return from(this.stockMongoEntity.remove(entity));
+      switchMap((entity: StockMongoModel) => {
+        entity.deleteOne({ _id: entityId.toString() });
+        return of(entity);
       }),
     );
   }
 
-  findAll(): Observable<StockMongoEntity[]> {
-    return from(this.stockMongoEntity.find()).pipe(
-      map((entities: StockMongoEntity[]) => {
+  findAll(): Observable<StockMongoModel[]> {
+    return from(
+      this.stockMongoModel.find({}, {}, { populate: 'location' }).exec(),
+    ).pipe(
+      map((entities: StockMongoModel[]) => {
         return entities;
       }),
     );
   }
 
-  findBy(
-    options: FindOptionsWhere<StockMongoEntity>,
-  ): Observable<StockMongoEntity[]> {
-    return from(this.stockMongoEntity.findBy(options));
-  }
-
-  findOneById(entityId: string): Observable<StockMongoEntity> {
-    return from(this.stockMongoEntity.findOneById(entityId)).pipe(
+  findOneById(entityId: string): Observable<StockMongoModel> {
+    return from(
+      this.stockMongoModel.findById(
+        { _id: entityId.toString() },
+        {},
+        { populate: 'location' },
+      ),
+    ).pipe(
       catchError((error: Error) => {
-        throw new NotFoundException(error.message);
+        throw new BadRequestException('Stock invalid ID format', error.message);
       }),
-      switchMap((product: StockMongoEntity) =>
+      switchMap((product: StockMongoModel) =>
         iif(
           () => product === null,
           throwError(() => new NotFoundException('Stock not found')),
