@@ -9,8 +9,8 @@ export class StockMongoService implements IStockDomainService<StockMongoModel> {
   constructor(private readonly stockMongoRepository: StockMongoRepository) {}
 
   findByProductIdAndLocationId(
-    locationId: string,
     productId: string,
+    locationId: string,
   ): Observable<StockMongoModel> {
     return this.stockMongoRepository.findAll().pipe(
       switchMap((stocks: StockMongoModel[]) => {

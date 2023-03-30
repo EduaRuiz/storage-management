@@ -33,8 +33,8 @@ export class RegisterInventoryMovementUseCase {
         }),
         switchMap(() =>
           this.stock$.findByProductIdAndLocationId(
-            inventoryMovementDto.locationId,
             inventoryMovementDto.productId,
+            inventoryMovementDto.locationId,
           ),
         ),
         catchError((error) =>

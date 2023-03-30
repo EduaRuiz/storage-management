@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
-import { InventoryController } from './infrastructure/controllers';
+import {
+  InventoryController,
+  InventoryEventController,
+} from './infrastructure/controllers';
 import { PersistenceModule } from './infrastructure/persistance';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'node:path';
@@ -21,7 +24,7 @@ import { LocationExistService } from './infrastructure/utils/services';
     MessagingModule,
     HttpModule,
   ],
-  controllers: [InventoryController],
+  controllers: [InventoryController, InventoryEventController],
   providers: [LocationExistService],
 })
 export class InventoryModule {}
