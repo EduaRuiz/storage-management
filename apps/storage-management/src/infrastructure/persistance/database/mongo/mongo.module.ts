@@ -28,13 +28,12 @@ import {
  */
 @Module({
   imports: [
-    // ConfigModule.forRoot(),
-    // MongooseModule.forRootAsync({
-    //   useClass: MongooseConfigService,
-    // }),
-    MongooseModule.forRoot(
-      'mongodb://root:password@localhost:27017/storage?authSource=admin',
-    ),
+    MongooseModule.forRootAsync({
+      useClass: MongooseConfigService,
+    }),
+    // MongooseModule.forRoot(
+    //   'mongodb://root:password@localhost:27017/storage?authSource=admin',
+    // ),
     MongooseModule.forFeature([
       { name: LocationMongoModel.name, schema: LocationSchema },
       { name: StockMongoModel.name, schema: StockSchema },

@@ -28,14 +28,12 @@ import {
  */
 @Module({
   imports: [
-    // ConfigModule.forRoot(),
-    // MongooseModule.forRootAsync({
-    //   useClass: MongooseConfigService,
-    // }),
-    // MongooseModule.forRoot('mongodb://localhost:27017/storage'),
-    MongooseModule.forRoot(
-      'mongodb://root:password@localhost:27017/inventory?authSource=admin',
-    ),
+    MongooseModule.forRootAsync({
+      useClass: MongooseConfigService,
+    }),
+    // MongooseModule.forRoot(
+    //   'mongodb://root:password@localhost:27017/inventory?authSource=admin',
+    // ),
     MongooseModule.forFeature([
       { name: ProductMongoModel.name, schema: ProductSchema },
       { name: StockMongoModel.name, schema: StockSchema },

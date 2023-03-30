@@ -9,12 +9,9 @@ import {
 export class MongooseConfigService implements MongooseOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
   createMongooseOptions(): MongooseModuleOptions {
-    console.log(this.configService.get<string>('MONGO_DB_URI_STORAGE'));
     return {
       uri: this.configService.get<string>('MONGO_DB_URI_STORAGE'),
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      logging: true,
+      dbName: this.configService.get<string>('MONGO_DB_NAME_STORAGE'),
     };
   }
 }

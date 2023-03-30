@@ -11,9 +11,7 @@ export class MongooseConfigService implements MongooseOptionsFactory {
   createMongooseOptions(): MongooseModuleOptions {
     return {
       uri: this.configService.get<string>('MONGO_DB_URI_INVENTORY'),
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      logging: true,
+      dbName: this.configService.get<string>('MONGO_DB_NAME_INVENTORY'),
     };
   }
 }
