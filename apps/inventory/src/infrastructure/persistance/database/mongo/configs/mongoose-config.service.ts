@@ -10,8 +10,7 @@ export class MongooseConfigService implements MongooseOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
   createMongooseOptions(): MongooseModuleOptions {
     return {
-      uri: 'mongodb://localhost:27017/inventory',
-      // authSource: 'admin',
+      uri: this.configService.get<string>('MONGO_DB_URI_INVENTORY'),
       useNewUrlParser: true,
       useUnifiedTopology: true,
       logging: true,

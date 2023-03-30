@@ -43,7 +43,7 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
           this.stockMongoModel.findByIdAndUpdate(
             { _id: entityId.toString() },
             { ...entity, _id: entityId },
-            { new: true, populate: 'location' },
+            { new: true, populate: 'product' },
           ),
         ).pipe(
           catchError((error: Error) => {
@@ -68,7 +68,7 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
 
   findAll(): Observable<StockMongoModel[]> {
     return from(
-      this.stockMongoModel.find({}, {}, { populate: 'location' }).exec(),
+      this.stockMongoModel.find({}, {}, { populate: 'product' }).exec(),
     ).pipe(
       map((entities: StockMongoModel[]) => {
         return entities;
@@ -77,11 +77,12 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
   }
 
   findOneById(entityId: string): Observable<StockMongoModel> {
+    console.log('findOneById', entityId);
     return from(
       this.stockMongoModel.findById(
         { _id: entityId.toString() },
         {},
-        { populate: 'location' },
+        { populate: 'product' },
       ),
     ).pipe(
       catchError((error: Error) => {

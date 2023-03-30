@@ -19,7 +19,6 @@ import {
   LocationMongoService,
   StockMongoService,
 } from './services';
-import { ConfigModule } from '@nestjs/config';
 
 /**
  * Modulo de Mongo
@@ -33,7 +32,9 @@ import { ConfigModule } from '@nestjs/config';
     // MongooseModule.forRootAsync({
     //   useClass: MongooseConfigService,
     // }),
-    MongooseModule.forRoot('mongodb://localhost:27017/storage'),
+    MongooseModule.forRoot(
+      'mongodb://root:password@localhost:27017/storage?authSource=admin',
+    ),
     MongooseModule.forFeature([
       { name: LocationMongoModel.name, schema: LocationSchema },
       { name: StockMongoModel.name, schema: StockSchema },

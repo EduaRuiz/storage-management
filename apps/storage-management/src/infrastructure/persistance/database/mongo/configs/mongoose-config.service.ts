@@ -9,10 +9,9 @@ import {
 export class MongooseConfigService implements MongooseOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
   createMongooseOptions(): MongooseModuleOptions {
+    console.log(this.configService.get<string>('MONGO_DB_URI_STORAGE'));
     return {
-      // uri: 'mongodb://root:password@localhost:27017',
-      uri: 'mongodb://localhost:27017/storage',
-      // authSource: 'admin',
+      uri: this.configService.get<string>('MONGO_DB_URI_STORAGE'),
       useNewUrlParser: true,
       useUnifiedTopology: true,
       logging: true,

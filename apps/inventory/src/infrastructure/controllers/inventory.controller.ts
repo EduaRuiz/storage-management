@@ -88,6 +88,7 @@ export class InventoryController {
     const registerInventoryMovement = new RegisterInventoryMovementUseCase(
       this.inventoryMovementService,
       this.stockService,
+      this.productService,
       this.locationExistService,
       this.registeredInventoryMovementPublisher,
     );
