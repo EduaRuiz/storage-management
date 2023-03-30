@@ -95,6 +95,17 @@
     "testEnvironment": "node",
     "roots": [
       "<rootDir>/apps/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/index\\.ts$",
+      ".module\\.ts$",
+      ".mock\\.ts$",
+      "main\\.ts$",
+      "<rootDir>/node_modules/",
+      "<rootDir>/dist/",
+      "<rootDir>/environments/",
+      "<rootDir>apps/inventory/test/",
+      "<rootDir>apps/storage-management/test/"
     ]
   }
 }

@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
-  GotInventoryMovementByProductPublisher,
-  GotProductInfoPublisher,
-  GotStocksByProductPublisher,
   RegisteredInventoryMovementPublisher,
   RegisteredNewProductPublisher,
   RemovedProductPublisher,
@@ -35,18 +32,12 @@ import {
     RegisteredNewProductPublisher,
     UpdatedProductInfoPublisher,
     RegisteredInventoryMovementPublisher,
-    GotProductInfoPublisher,
-    GotInventoryMovementByProductPublisher,
-    GotStocksByProductPublisher,
     RemovedProductPublisher,
   ],
   exports: [
     RegisteredNewProductPublisher,
     UpdatedProductInfoPublisher,
     RegisteredInventoryMovementPublisher,
-    GotProductInfoPublisher,
-    GotInventoryMovementByProductPublisher,
-    GotStocksByProductPublisher,
     RemovedProductPublisher,
   ],
 })

@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  UseFilters,
   Headers,
   UseGuards,
 } from '@nestjs/common';
@@ -21,26 +20,21 @@ import {
   UpdateLocationDto,
 } from '../utils/dtos';
 import {
-  GotInventoryTransferByProductPublisher,
-  GotInventoryTransferByLocationPublisher,
   RegisteredInventoryTransferPublisher,
   RegisteredNewLocationPublisher,
   UpdatedLocationInfoPublisher,
-  GotLocationInfoPublisher,
 } from '../messaging/publishers';
 import { LocationModel } from '../persistance/models';
 import {
   GetLocationInfoUseCase,
   RegisterInventoryTransferUseCase,
+  RegisterNewLocationUseCase,
 } from '../../application/use-cases';
-import { GotLocationInfoDomainEvent } from '../../domain/events/publishers/got-location-info.domain-event';
 import {
   InventoryTransferDomainModel,
   LocationDomainModel,
 } from '../../domain/models';
-import { RegisterNewLocationUseCase } from '../../application/use-cases/register-new-location.use-case';
 import { ProductExistService } from '../utils/services';
-import { MongoServerErrorExceptionFilter } from '../utils/exception-filters';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('storage')
@@ -53,11 +47,7 @@ export class StorageController {
     private readonly productExistService: ProductExistService,
     private readonly registeredNewLocationPublisher: RegisteredNewLocationPublisher,
     private readonly updatedLocationInfoPublisher: UpdatedLocationInfoPublisher,
-    private readonly gotLocationInfoPublisher: GotLocationInfoPublisher,
-    private readonly gotStocksByLocationPublisher: GotInventoryTransferByLocationPublisher,
-    private readonly gotStocksByProductPublisher: GotInventoryTransferByProductPublisher,
     private readonly registeredInventoryTransferPublisher: RegisteredInventoryTransferPublisher,
-    private readonly gotInventoryTransferByLocationPublisher: GotInventoryTransferByLocationPublisher,
   ) {}
 
   @UseGuards(AuthGuard())
@@ -79,7 +69,6 @@ export class StorageController {
   ): Observable<LocationDomainModel> {
     const getLocationInfoUseCase = new GetLocationInfoUseCase(
       this.locationService,
-      this.gotLocationInfoPublisher,
     );
     return getLocationInfoUseCase.execute(locationId);
   }

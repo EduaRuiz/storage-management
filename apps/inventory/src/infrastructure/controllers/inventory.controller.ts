@@ -29,9 +29,6 @@ import {
   UpdateProductDto,
 } from '../utils/dtos';
 import {
-  GotInventoryMovementByProductPublisher,
-  GotProductInfoPublisher,
-  GotStocksByProductPublisher,
   RegisteredInventoryMovementPublisher,
   RegisteredNewProductPublisher,
   RemovedProductPublisher,
@@ -49,10 +46,7 @@ export class InventoryController {
     private readonly inventoryMovementService: InventoryMovementService,
     private readonly registeredNewProductPublisher: RegisteredNewProductPublisher,
     private readonly updatedProductInfoPublisher: UpdatedProductInfoPublisher,
-    private readonly gotProductInfoPublisher: GotProductInfoPublisher,
-    private readonly gotStocksByProductPublisher: GotStocksByProductPublisher,
     private readonly registeredInventoryMovementPublisher: RegisteredInventoryMovementPublisher,
-    private readonly gotInventoryMovementByProductPublisher: GotInventoryMovementByProductPublisher,
     private readonly removedProductPublisher: RemovedProductPublisher,
   ) {}
 
@@ -82,10 +76,7 @@ export class InventoryController {
   @UseGuards(AuthGuard())
   @Get('product/info/:id')
   getProductInfo(@Param('id') productId: string) {
-    const newProduct = new GetProductInfoUseCase(
-      this.productService,
-      this.gotProductInfoPublisher,
-    );
+    const newProduct = new GetProductInfoUseCase(this.productService);
     return newProduct.execute(productId);
   }
 
@@ -111,7 +102,6 @@ export class InventoryController {
   getInventoryMovementsByProduct(@Param('id') productId: string) {
     const inventoryMovements = new GetInventoryMovementsByProductUseCase(
       this.inventoryMovementService,
-      this.gotInventoryMovementByProductPublisher,
     );
     return inventoryMovements.execute(productId);
   }
@@ -119,10 +109,7 @@ export class InventoryController {
   @UseGuards(AuthGuard())
   @Get('stocks/product/:id')
   getStocksByProduct(@Param('id') productId: string) {
-    const inventoryMovements = new GetStocksByProductUseCase(
-      this.stockService,
-      this.gotStocksByProductPublisher,
-    );
+    const inventoryMovements = new GetStocksByProductUseCase(this.stockService);
     return inventoryMovements.execute(productId);
   }
 
