@@ -7,7 +7,7 @@ import { ProductDomainModel } from '../../domain/models';
 export class UpdateProductInfoUseCase {
   constructor(
     private readonly product$: IProductDomainService,
-    private readonly updatedProductInfoDomainEvent: UpdatedProductInfoDomainEvent,
+    private readonly updatedProductInfoDomainEvent: UpdatedProductInfoDomainEvent<ProductDomainModel>,
   ) {}
 
   execute(
@@ -15,20 +15,19 @@ export class UpdateProductInfoUseCase {
     updateProductDto: IUpdateProductDomainDto,
   ): Observable<ProductDomainModel> {
     return this.product$.findOneById(productId).pipe(
-      switchMap((product: ProductDomainModel) => {
-        const entity: ProductDomainModel = { ...product, ...updateProductDto };
-        return this.updateProductInfo(productId, entity);
-      }),
-    );
-  }
-
-  private updateProductInfo(
-    productId: string,
-    product: ProductDomainModel,
-  ): Observable<ProductDomainModel> {
-    return this.product$.update(productId, product).pipe(
-      tap((product: ProductDomainModel) => {
-        this.updatedProductInfoDomainEvent.publish(product).subscribe();
+      switchMap((entity: ProductDomainModel) => {
+        entity = {
+          name: entity.name,
+          description: entity.description,
+          price: entity.price,
+          ...updateProductDto,
+          _id: productId,
+        };
+        return this.product$.update(productId, entity).pipe(
+          tap((entity: ProductDomainModel) => {
+            this.updatedProductInfoDomainEvent.publish(entity).subscribe();
+          }),
+        );
       }),
     );
   }

@@ -6,6 +6,8 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
+  Headers,
 } from '@nestjs/common';
 import {
   InventoryMovementService,
@@ -36,6 +38,7 @@ import {
   UpdatedProductInfoPublisher,
 } from '../messaging/publishers';
 import { LocationExistService } from '../utils/services';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('inventory')
 export class InventoryController {
@@ -53,6 +56,7 @@ export class InventoryController {
     private readonly removedProductPublisher: RemovedProductPublisher,
   ) {}
 
+  @UseGuards(AuthGuard())
   @Post('product/create')
   createProduct(@Body() product: NewProductDto) {
     const newProduct = new RegisterNewProductUseCase(
@@ -62,6 +66,7 @@ export class InventoryController {
     return newProduct.execute(product);
   }
 
+  @UseGuards(AuthGuard())
   @Put('product/update/:id')
   updateProduct(
     @Param('id') productId: string,
@@ -74,6 +79,7 @@ export class InventoryController {
     return newProduct.execute(productId, product);
   }
 
+  @UseGuards(AuthGuard())
   @Get('product/info/:id')
   getProductInfo(@Param('id') productId: string) {
     const newProduct = new GetProductInfoUseCase(
@@ -83,8 +89,13 @@ export class InventoryController {
     return newProduct.execute(productId);
   }
 
+  @UseGuards(AuthGuard())
   @Post('movement/register')
-  registerInventoryMovement(@Body() movement: InventoryMovementDto) {
+  registerInventoryMovement(
+    @Headers('authorization') authHeader: string,
+    @Body() movement: InventoryMovementDto,
+  ) {
+    const token = authHeader?.split(' ')[1];
     const registerInventoryMovement = new RegisterInventoryMovementUseCase(
       this.inventoryMovementService,
       this.stockService,
@@ -92,9 +103,10 @@ export class InventoryController {
       this.locationExistService,
       this.registeredInventoryMovementPublisher,
     );
-    return registerInventoryMovement.execute(movement);
+    return registerInventoryMovement.execute(movement, token);
   }
 
+  @UseGuards(AuthGuard())
   @Get('inventory-movements/product/:id')
   getInventoryMovementsByProduct(@Param('id') productId: string) {
     const inventoryMovements = new GetInventoryMovementsByProductUseCase(
@@ -104,6 +116,7 @@ export class InventoryController {
     return inventoryMovements.execute(productId);
   }
 
+  @UseGuards(AuthGuard())
   @Get('stocks/product/:id')
   getStocksByProduct(@Param('id') productId: string) {
     const inventoryMovements = new GetStocksByProductUseCase(
@@ -113,10 +126,12 @@ export class InventoryController {
     return inventoryMovements.execute(productId);
   }
 
+  @UseGuards(AuthGuard())
   @Delete('product/:id')
   deleteProduct(@Param('id') productId: string) {
     const removeProductUseCase = new RemoveProductUseCase(
       this.productService,
+      this.stockService,
       this.removedProductPublisher,
     );
     return removeProductUseCase.execute(productId);

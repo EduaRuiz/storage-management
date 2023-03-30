@@ -23,9 +23,10 @@ export class RegisterInventoryMovementUseCase {
 
   execute(
     inventoryMovementDto: IInventoryMovementDomainDto,
+    token: string,
   ): Observable<InventoryMovementDomainModel> {
     const locationExists = this.locationExist$
-      .exist(inventoryMovementDto.locationId)
+      .exist(inventoryMovementDto.locationId, token)
       .pipe(
         catchError((error) => {
           console.log(error);

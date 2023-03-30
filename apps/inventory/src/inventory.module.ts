@@ -9,9 +9,17 @@ import { join } from 'node:path';
 import { MessagingModule } from './infrastructure/messaging';
 import { HttpModule } from '@nestjs/axios';
 import { LocationExistService } from './infrastructure/utils/services';
+import { JwtStrategy } from './infrastructure/utils/strategies';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secret: 'll4v3',
+      signOptions: { expiresIn: '2h' },
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: join(
@@ -25,6 +33,7 @@ import { LocationExistService } from './infrastructure/utils/services';
     HttpModule,
   ],
   controllers: [InventoryController, InventoryEventController],
-  providers: [LocationExistService],
+  providers: [LocationExistService, JwtStrategy, JwtModule, JwtService],
+  exports: [PassportModule, JwtStrategy, JwtModule, JwtService],
 })
 export class InventoryModule {}

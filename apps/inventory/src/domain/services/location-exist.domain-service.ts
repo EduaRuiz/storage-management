@@ -2,5 +2,5 @@ import { ILocationExist } from '../interfaces/data-out-context';
 import { Observable } from 'rxjs/internal/Observable';
 
 export interface ILocationExistDomainService {
-  exist(locationId: string): Observable<ILocationExist>;
+  exist(locationId: string, token: string): Observable<ILocationExist>;
 }

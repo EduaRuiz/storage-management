@@ -1,22 +1,26 @@
 import {
-  ArgumentsHost,
-  Catch,
   ExceptionFilter,
-  HttpStatus,
+  Catch,
+  ArgumentsHost,
+  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { MongoServerError } from 'mongodb';
+import { MongooseError } from 'mongoose';
 
-@Catch(MongoServerError)
-export class MongoServerErrorExceptionFilter
-  implements ExceptionFilter<MongoServerError>
-{
-  catch(exception: MongoServerError, host: ArgumentsHost) {
-    const context = host.switchToHttp();
-    const response = context.getResponse<Response>();
-    const message = exception.message;
-    const statusCode = HttpStatus.CONFLICT;
-    const details = exception;
-    response.status(statusCode).json({ statusCode, message, details });
+@Catch(MongooseError)
+export class MongoServerErrorExceptionFilter implements ExceptionFilter {
+  catch(exception: MongooseError, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    let status = 500;
+    let message = 'Internal server error';
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
+      message = exception.message;
+    }
+    response.status(status).json({
+      statusCode: status,
+      message: message,
+    });
   }
 }

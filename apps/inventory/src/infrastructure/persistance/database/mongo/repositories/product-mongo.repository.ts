@@ -62,13 +62,13 @@ export class ProductMongoRepository
 
   delete(entityId: string): Observable<ProductMongoModel> {
     return this.findOneById(entityId).pipe(
-      tap(() => {
+      switchMap((product: ProductMongoModel) => {
         return from(
           this.productMongoModel.findByIdAndDelete(
-            { _id: entityId.toString() },
+            { _id: entityId },
             { new: true },
           ),
-        ).pipe(map((entity: ProductMongoModel) => entity));
+        ).pipe(map(() => product));
       }),
     );
   }

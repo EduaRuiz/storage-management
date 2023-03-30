@@ -11,6 +11,8 @@ export class RegisterNewProductUseCase {
   ) {}
 
   execute(newProductDto: INewProductDomainDto): Observable<ProductDomainModel> {
+    newProductDto.name = newProductDto.name.trim().toUpperCase();
+    newProductDto.description = newProductDto.description.trim();
     return this.product$.create(newProductDto).pipe(
       tap((product: ProductDomainModel) => {
         this.registeredNewProductDomainEvent.publish(product);

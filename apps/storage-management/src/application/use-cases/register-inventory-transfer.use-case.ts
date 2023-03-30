@@ -27,8 +27,9 @@ export class RegisterInventoryTransferUseCase {
 
   execute(
     dto: IInventoryTransferDomainDto,
+    token: string,
   ): Observable<InventoryTransferDomainModel> {
-    return this.productExist$.exist(dto.productId).pipe(
+    return this.productExist$.exist(dto.productId, token).pipe(
       catchError((error) => {
         throw new NotFoundException('Product not found', error.message);
       }),

@@ -68,7 +68,7 @@ export class InventoryMovementMongoRepository
   delete(entityId: string): Observable<InventoryMovementMongoModel> {
     return this.findOneById(entityId).pipe(
       switchMap((entity: InventoryMovementMongoModel) => {
-        entity.deleteOne({ _id: entityId });
+        entity.deleteOne({ _id: entityId, populate: 'stock' });
         return of(entity);
       }),
     );
