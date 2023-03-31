@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { LocationModel } from '../../persistance/models';
 import { Observable } from 'rxjs';
-import { UpdatedLocationInfoDomainEvent } from 'apps/storage-management/src/domain/events/publishers';
+import { UpdatedLocationInfoDomainEvent } from '@storage/domain/events/publishers';
 
 @Injectable()
 export class UpdatedLocationInfoPublisher extends UpdatedLocationInfoDomainEvent {

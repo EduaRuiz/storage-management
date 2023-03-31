@@ -10,17 +10,9 @@ import { join } from 'path';
 import { ProductExistService } from './infrastructure/utils/services';
 import { HttpModule } from '@nestjs/axios';
 import { MongoServerErrorExceptionFilter } from './infrastructure/utils/exception-filters';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { JwtStrategy } from './infrastructure/utils/strategies';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secret: 'll4v3',
-      signOptions: { expiresIn: '2h' },
-    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: join(
@@ -34,13 +26,6 @@ import { JwtStrategy } from './infrastructure/utils/strategies';
     HttpModule,
   ],
   controllers: [StorageController, StorageEventController],
-  providers: [
-    ProductExistService,
-    MongoServerErrorExceptionFilter,
-    JwtStrategy,
-    JwtModule,
-    JwtService,
-  ],
-  exports: [PassportModule, JwtStrategy, JwtModule, JwtService],
+  providers: [ProductExistService, MongoServerErrorExceptionFilter],
 })
 export class AppModule {}

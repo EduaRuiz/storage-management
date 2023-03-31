@@ -25,7 +25,7 @@ export class UpdateProductInfoUseCase {
         };
         return this.product$.update(productId, entity).pipe(
           tap((entity: ProductDomainModel) => {
-            this.updatedProductInfoDomainEvent.publish(entity).subscribe();
+            this.updatedProductInfoDomainEvent.publish(entity);
           }),
         );
       }),

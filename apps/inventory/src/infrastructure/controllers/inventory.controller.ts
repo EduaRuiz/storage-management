@@ -35,7 +35,7 @@ import {
   UpdatedProductInfoPublisher,
 } from '../messaging/publishers';
 import { LocationExistService } from '../utils/services';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtGuard } from '../utils/guards';
 
 @Controller('inventory')
 export class InventoryController {
@@ -50,7 +50,7 @@ export class InventoryController {
     private readonly removedProductPublisher: RemovedProductPublisher,
   ) {}
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Post('product/create')
   createProduct(@Body() product: NewProductDto) {
     const newProduct = new RegisterNewProductUseCase(
@@ -60,7 +60,7 @@ export class InventoryController {
     return newProduct.execute(product);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Put('product/update/:id')
   updateProduct(
     @Param('id') productId: string,
@@ -73,14 +73,14 @@ export class InventoryController {
     return newProduct.execute(productId, product);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Get('product/info/:id')
   getProductInfo(@Param('id') productId: string) {
     const newProduct = new GetProductInfoUseCase(this.productService);
     return newProduct.execute(productId);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Post('movement/register')
   registerInventoryMovement(
     @Headers('authorization') authHeader: string,
@@ -97,7 +97,7 @@ export class InventoryController {
     return registerInventoryMovement.execute(movement, token);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Get('inventory-movements/product/:id')
   getInventoryMovementsByProduct(@Param('id') productId: string) {
     const inventoryMovements = new GetInventoryMovementsByProductUseCase(
@@ -106,14 +106,14 @@ export class InventoryController {
     return inventoryMovements.execute(productId);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Get('stocks/product/:id')
   getStocksByProduct(@Param('id') productId: string) {
     const inventoryMovements = new GetStocksByProductUseCase(this.stockService);
     return inventoryMovements.execute(productId);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Delete('product/:id')
   deleteProduct(@Param('id') productId: string) {
     const removeProductUseCase = new RemoveProductUseCase(

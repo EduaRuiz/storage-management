@@ -29,7 +29,6 @@ export class RegisterInventoryMovementUseCase {
       .exist(inventoryMovementDto.locationId, token)
       .pipe(
         catchError((error) => {
-          console.log(error);
           throw new NotFoundException('Location not found', error.message);
         }),
         switchMap(() =>
@@ -66,9 +65,9 @@ export class RegisterInventoryMovementUseCase {
             })
             .pipe(
               tap((inventoryMovement: InventoryMovementDomainModel) => {
-                this.registeredInventoryMovementDomainEvent
-                  .publish(inventoryMovement)
-                  .subscribe();
+                this.registeredInventoryMovementDomainEvent.publish(
+                  inventoryMovement,
+                );
               }),
             ),
         ),

@@ -77,7 +77,6 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
   }
 
   findOneById(entityId: string): Observable<StockMongoModel> {
-    console.log('findOneById', entityId);
     return from(
       this.stockMongoModel.findById(
         { _id: entityId.toString() },

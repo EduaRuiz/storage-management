@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ProductModel } from '../../persistance/models';
 import { Observable } from 'rxjs';
-import { UpdatedProductInfoDomainEvent } from 'apps/inventory/src/domain/events/publishers';
+import { UpdatedProductInfoDomainEvent } from '@inventory/domain/events/publishers';
 
 @Injectable()
 export class UpdatedProductInfoPublisher extends UpdatedProductInfoDomainEvent {

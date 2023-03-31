@@ -1,4 +1,4 @@
-import { Observable, map, tap } from 'rxjs';
+import { Observable, map, switchMap, zip } from 'rxjs';
 import {
   InventoryTransferMongoRepository,
   StockMongoRepository,
@@ -21,13 +21,18 @@ export class InventoryTransferMongoService
     entity.stockIn.quantity += entity.quantity;
     entity.stockOut.quantity -= entity.quantity;
     return this.inventoryTransferMongoRepository.create(entity).pipe(
-      tap(() => {
-        this.stockMongoRepository
-          .update(entity.stockIn._id, entity.stockIn)
-          .subscribe();
-        this.stockMongoRepository
-          .update(entity.stockOut._id, entity.stockOut)
-          .subscribe();
+      switchMap((inventoryTransfer: InventoryTransferMongoModel) => {
+        const updateStockIn$ = this.stockMongoRepository.update(
+          entity.stockIn._id,
+          entity.stockIn,
+        );
+        const updateStockOut$ = this.stockMongoRepository.update(
+          entity.stockOut._id,
+          entity.stockOut,
+        );
+        return zip(updateStockIn$, updateStockOut$).pipe(
+          map(() => inventoryTransfer),
+        );
       }),
     );
   }

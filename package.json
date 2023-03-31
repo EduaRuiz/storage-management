@@ -104,8 +104,12 @@
       "<rootDir>/node_modules/",
       "<rootDir>/dist/",
       "<rootDir>/environments/",
-      "<rootDir>apps/inventory/test/",
-      "<rootDir>apps/storage-management/test/"
-    ]
+      "<rootDir>/apps/inventory/test/",
+      "<rootDir>/apps/storage-management/test/"
+    ],
+    "moduleNameMapper": {
+      "@inventory/(.*)": "<rootDir>/apps/inventory/src/$1",
+      "@storage/(.*)": "<rootDir>/apps/storage-management/src/$1"
+    }
   }
 }

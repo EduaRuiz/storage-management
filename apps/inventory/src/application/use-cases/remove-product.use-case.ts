@@ -24,7 +24,7 @@ export class RemoveProductUseCase {
   private deleteProduct(productId: string): Observable<ProductDomainModel> {
     return this.product$.delete(productId).pipe(
       mergeMap((product) => {
-        this.removedProductPublisher.publish(product).subscribe();
+        this.removedProductPublisher.publish(product);
         return of(product);
       }),
     );

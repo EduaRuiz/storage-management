@@ -5,7 +5,7 @@ import {
   ILocationDomainService,
   IStockDomainService,
 } from '../../domain/services';
-import { catchError, iif, map, mergeMap, of, switchMap, tap } from 'rxjs';
+import { catchError, iif, map, mergeMap, of, switchMap } from 'rxjs';
 
 export class StockInventoryEventManagerUseCase {
   constructor(

@@ -38,9 +38,7 @@ export class RegisterInventoryTransferUseCase {
       switchMap((entity: InventoryTransferDomainModel) => {
         return this.inventoryTransfer$.generateTransfer(entity).pipe(
           tap((entity: InventoryTransferDomainModel) => {
-            this.registeredInventoryTransferDomainEvent
-              .publish(entity)
-              .subscribe();
+            this.registeredInventoryTransferDomainEvent.publish(entity);
           }),
         );
       }),

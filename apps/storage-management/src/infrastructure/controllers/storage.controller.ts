@@ -1,4 +1,4 @@
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   Body,
   Controller,
@@ -24,18 +24,18 @@ import {
   RegisteredNewLocationPublisher,
   UpdatedLocationInfoPublisher,
 } from '../messaging/publishers';
-import { LocationModel } from '../persistance/models';
 import {
   GetLocationInfoUseCase,
   RegisterInventoryTransferUseCase,
   RegisterNewLocationUseCase,
+  UpdateLocationInfoUseCase,
 } from '../../application/use-cases';
 import {
   InventoryTransferDomainModel,
   LocationDomainModel,
 } from '../../domain/models';
 import { ProductExistService } from '../utils/services';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtGuard } from '../utils/guards';
 
 @Controller('storage')
 // @UseFilters(MongoServerErrorExceptionFilter)
@@ -50,7 +50,7 @@ export class StorageController {
     private readonly registeredInventoryTransferPublisher: RegisteredInventoryTransferPublisher,
   ) {}
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Post('location/create')
   registerNewLocation(
     @Body() newLocationDto: NewLocationDto,
@@ -62,7 +62,7 @@ export class StorageController {
     return registerNewLocationUseCase.execute(newLocationDto);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Get('location/info/:_id')
   getLocationInfo(
     @Param('_id') locationId: string,
@@ -73,22 +73,20 @@ export class StorageController {
     return getLocationInfoUseCase.execute(locationId);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Put('location/update/:_id')
   updateLocation(
     @Body() updateLocationDto: UpdateLocationDto,
     @Param('_id') locationId: string,
-  ): Observable<LocationModel> {
-    return this.locationService
-      .updateLocation(locationId, updateLocationDto as LocationModel)
-      .pipe(
-        tap((location: LocationModel) => {
-          this.updatedLocationInfoPublisher.publish(location);
-        }),
-      );
+  ): Observable<LocationDomainModel> {
+    const updateLocationInfoUseCase = new UpdateLocationInfoUseCase(
+      this.locationService,
+      this.updatedLocationInfoPublisher,
+    );
+    return updateLocationInfoUseCase.execute(locationId, updateLocationDto);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtGuard)
   @Post('inventory-transfer/register')
   registerInventoryTransfer(
     @Headers('authorization') authHeader: string,

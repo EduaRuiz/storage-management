@@ -15,7 +15,6 @@ export class StockMongoService implements IStockDomainService<StockMongoModel> {
     return this.stockMongoRepository.findAll().pipe(
       switchMap((stocks: StockMongoModel[]) => {
         const stock = stocks.filter((stock: StockMongoModel) => {
-          console.log(stock.product._id.toString(), productId.toString());
           return (
             stock.product._id.toString() === productId.toString() &&
             stock.locationId.toString() === locationId.toString()

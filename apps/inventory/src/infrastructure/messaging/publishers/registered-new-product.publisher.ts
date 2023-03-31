@@ -1,9 +1,8 @@
-import { RegisteredNewProductDomainEvent } from 'apps/inventory/src/domain/events/publishers';
 import { Inject, Injectable } from '@nestjs/common';
-import { ProductDomainModel } from 'apps/inventory/src/domain/models';
 import { ClientProxy } from '@nestjs/microservices';
 import { ProductModel } from '../../persistance/models';
 import { Observable } from 'rxjs';
+import { RegisteredNewProductDomainEvent } from '@inventory/domain/events/publishers';
 
 @Injectable()
 export class RegisteredNewProductPublisher extends RegisteredNewProductDomainEvent {
