@@ -1,13 +1,27 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { InventoryMovementDomainModel } from 'apps/inventory/src/domain/models';
-import mongoose, { HydratedDocument, Document } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { StockMongoModel } from '.';
 
 @Schema({ collection: 'inventory-movement', versionKey: false })
 export class InventoryMovementMongoModel
-  extends Document
   implements InventoryMovementDomainModel
 {
+  constructor(
+    quantity: number,
+    typeMovement: 'IN' | 'OUT',
+    dateTime: Date,
+    stock: StockMongoModel,
+    _id?: string,
+  ) {
+    this.quantity = quantity;
+    this.typeMovement = typeMovement;
+    this.dateTime = dateTime;
+    this.stock = stock;
+    this._id = _id;
+  }
+  _id?: string;
+
   @Prop({
     required: true,
     type: Number,

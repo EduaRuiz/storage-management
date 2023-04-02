@@ -8,7 +8,6 @@ import {
   mergeMap,
   of,
   switchMap,
-  tap,
   throwError,
 } from 'rxjs';
 import {
@@ -62,13 +61,13 @@ export class ProductMongoRepository
 
   delete(entityId: string): Observable<ProductMongoModel> {
     return this.findOneById(entityId).pipe(
-      switchMap((product: ProductMongoModel) => {
+      switchMap(() => {
         return from(
           this.productMongoModel.findByIdAndDelete(
             { _id: entityId },
             { new: true },
           ),
-        ).pipe(map(() => product));
+        );
       }),
     );
   }

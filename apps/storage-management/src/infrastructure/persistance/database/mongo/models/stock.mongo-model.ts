@@ -4,10 +4,21 @@ import { StockDomainModel } from '../../../../../domain/models';
 import { LocationMongoModel } from '.';
 
 @Schema({ collection: 'stock', versionKey: false })
-export class StockMongoModel
-  extends mongoose.Document
-  implements StockDomainModel
-{
+export class StockMongoModel implements StockDomainModel {
+  constructor(
+    location: LocationMongoModel,
+    quantity: number,
+    productId: string,
+    _id?: string,
+  ) {
+    this.location = location;
+    this.quantity = quantity;
+    this.productId = productId;
+    this._id = _id;
+  }
+
+  _id?: string;
+
   @Prop({
     name: 'quantity',
     required: true,

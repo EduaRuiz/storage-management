@@ -1,9 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ProductDomainModel } from 'apps/inventory/src/domain/models';
-import { HydratedDocument, Document } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 @Schema({ collection: 'product', versionKey: false })
-export class ProductMongoModel extends Document implements ProductDomainModel {
+export class ProductMongoModel implements ProductDomainModel {
+  constructor(name: string, description: string, price: number, _id?: string) {
+    this.name = name;
+    this.description = description;
+    this.price = price;
+    this._id = _id;
+  }
+
+  _id?: string;
+
   @Prop({
     required: true,
     unique: true,

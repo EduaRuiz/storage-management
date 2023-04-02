@@ -47,10 +47,7 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
           ),
         ).pipe(
           catchError((error: Error) => {
-            throw new ConflictException(
-              'Location update conflict',
-              error.message,
-            );
+            throw new ConflictException('Stock update conflict', error.message);
           }),
         );
       }),
@@ -59,9 +56,11 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
 
   delete(entityId: string): Observable<StockMongoModel> {
     return this.findOneById(entityId).pipe(
-      switchMap((entity: StockMongoModel) => {
-        entity.deleteOne({ _id: entityId.toString() });
-        return of(entity);
+      switchMap(() => {
+        return this.stockMongoEntity.findByIdAndDelete({
+          _id: entityId.toString(),
+          populate: 'location',
+        });
       }),
     );
   }

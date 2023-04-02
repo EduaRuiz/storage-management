@@ -1,12 +1,23 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { LocationDomainModel } from 'apps/storage-management/src/domain/models';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 @Schema({ collection: 'location', versionKey: false })
-export class LocationMongoModel
-  extends mongoose.Document
-  implements LocationDomainModel
-{
+export class LocationMongoModel implements LocationDomainModel {
+  constructor(
+    name: string,
+    description: string,
+    address: string,
+    _id?: string,
+  ) {
+    this.name = name;
+    this.description = description;
+    this.address = address;
+    this._id = _id;
+  }
+
+  _id?: string;
+
   @Prop({
     name: 'name',
     required: true,

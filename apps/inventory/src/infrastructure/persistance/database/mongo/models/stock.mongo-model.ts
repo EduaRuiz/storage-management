@@ -1,10 +1,26 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument, Document } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { StockDomainModel } from '../../../../../domain/models';
 import { ProductMongoModel } from '.';
 
 @Schema({ collection: 'stock', versionKey: false })
-export class StockMongoModel extends Document implements StockDomainModel {
+export class StockMongoModel implements StockDomainModel {
+  constructor(
+    quantity: number,
+    locationId: string,
+    dateTime: Date,
+    product: ProductMongoModel,
+    _id?: string,
+  ) {
+    this.quantity = quantity;
+    this.locationId = locationId;
+    this.dateTime = dateTime;
+    this.product = product;
+    this._id = _id;
+  }
+
+  _id?: string;
+
   @Prop({
     required: true,
     type: Number,

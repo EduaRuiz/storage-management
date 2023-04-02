@@ -6,7 +6,6 @@ import {
   map,
   of,
   switchMap,
-  tap,
   throwError,
 } from 'rxjs';
 import { IRepositoryBase } from './interfaces';
@@ -45,7 +44,7 @@ export class InventoryTransferMongoRepository
     entity: InventoryTransferMongoModel,
   ): Observable<InventoryTransferMongoModel> {
     return this.findOneById(entityId).pipe(
-      tap(() => {
+      switchMap(() => {
         return from(
           this.inventoryTransferMongoEntity.findByIdAndUpdate(
             { _id: entityId.toString() },
@@ -59,7 +58,6 @@ export class InventoryTransferMongoRepository
               error.message,
             );
           }),
-          map((location: InventoryTransferMongoModel) => location),
         );
       }),
     );
@@ -67,9 +65,11 @@ export class InventoryTransferMongoRepository
 
   delete(entityId: string): Observable<InventoryTransferMongoModel> {
     return this.findOneById(entityId).pipe(
-      switchMap((entity: InventoryTransferMongoModel) => {
-        entity.deleteOne({ _id: entityId });
-        return of(entity);
+      switchMap(() => {
+        return this.inventoryTransferMongoEntity.findByIdAndDelete({
+          _id: entityId,
+          populate: 'stock',
+        });
       }),
     );
   }

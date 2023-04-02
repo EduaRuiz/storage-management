@@ -1,13 +1,26 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument, Document } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { StockMongoModel } from '.';
 import { InventoryTransferDomainModel } from 'apps/storage-management/src/domain/models';
 
 @Schema({ collection: 'inventory-transfer', versionKey: false })
 export class InventoryTransferMongoModel
-  extends Document
   implements InventoryTransferDomainModel
 {
+  constructor(
+    stockIn: StockMongoModel,
+    stockOut: StockMongoModel,
+    quantity: number,
+    _id?: string,
+  ) {
+    this.stockIn = stockIn;
+    this.stockOut = stockOut;
+    this.quantity = quantity;
+    this._id = _id;
+  }
+
+  _id?: string;
+
   @Prop({
     name: 'quantity',
     required: true,
