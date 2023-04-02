@@ -1,4 +1,4 @@
-import { MaxLength } from 'class-validator';
+import { MaxLength, IsNotEmpty } from 'class-validator';
 import { IsDefined, IsOptional, IsString, Matches } from 'class-validator';
 
 export class UpdateLocationDto {
@@ -15,10 +15,12 @@ export class UpdateLocationDto {
   @IsOptional()
   @IsString()
   @IsDefined()
+  @IsNotEmpty()
   description?: string;
   @IsOptional()
   @IsString()
   @IsDefined()
+  @IsNotEmpty()
   @MaxLength(100)
   address?: string;
 }

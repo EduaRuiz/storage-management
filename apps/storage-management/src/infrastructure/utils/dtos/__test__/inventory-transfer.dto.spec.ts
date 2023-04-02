@@ -1,13 +1,9 @@
-import {
-  IsDefined,
-  IsInt,
-  IsPositive,
-  IsString,
-  Matches,
-} from 'class-validator';
+import { validate } from 'class-validator';
 import { InventoryTransferDto } from '..';
+import { plainToInstance } from 'class-transformer';
 
 describe('InventoryTransferDto', () => {
+  let dto: InventoryTransferDto;
   const validData = {
     productId: '611d8b86ebf1770c40fdd6b4',
     locationInId: '611d8b86ebf1770c40fdd6b5',
@@ -22,10 +18,17 @@ describe('InventoryTransferDto', () => {
     quantity: -5,
   };
 
-  it('should validate valid data', () => {
+  beforeEach(() => {
+    dto = new InventoryTransferDto();
+  });
+
+  it('should be defined', () => {
+    expect(dto).toBeDefined();
+  });
+
+  it('should validate valid data', async () => {
     // Arrange
-    const dto = new InventoryTransferDto();
-    Object.assign(dto, validData);
+    dto = plainToInstance(InventoryTransferDto, validData);
 
     // Act
     const errors = await validate(dto);
@@ -34,19 +37,23 @@ describe('InventoryTransferDto', () => {
     expect(errors.length).toBe(0);
   });
 
-  it('should validate invalid data', () => {
+  it('should validate invalid data', async () => {
     // Arrange
-    const dto = new InventoryTransferDto();
-    Object.assign(dto, invalidData);
+    dto = plainToInstance(InventoryTransferDto, invalidData);
+    const expectedErrors = {
+      matches: 'ProductId is not valid',
+      productId: 'ProductId is not valid',
+      quantity: 'quantity must be a positive number',
+    };
 
     // Act
     const errors = await validate(dto);
 
     // Assert
     expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].constraints).toMatchObject({
-      productId: 'ProductId is not valid',
-      quantity: 'quantity must be a positive number',
-    });
+    console.log(JSON.stringify(errors));
+    expect(JSON.stringify(errors)).toContain(expectedErrors.matches),
+      expect(JSON.stringify(errors)).toContain(expectedErrors.productId),
+      expect(JSON.stringify(errors)).toContain(expectedErrors.quantity);
   });
 });

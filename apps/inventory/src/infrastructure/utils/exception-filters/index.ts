@@ -1,1 +1,1 @@
-export * from './not-found.exception-filter';
+export * from './mongo-server-error.exception-filter';

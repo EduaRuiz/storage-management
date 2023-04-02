@@ -1,6 +1,7 @@
 import { IUpdateProductDomainDto } from 'apps/inventory/src/domain/dtos';
 import {
   IsDefined,
+  IsNotEmpty,
   IsOptional,
   IsPositive,
   IsString,
@@ -17,10 +18,12 @@ export class UpdateProductDto implements IUpdateProductDomainDto {
   @IsOptional()
   @IsString()
   @IsDefined()
+  @IsNotEmpty()
   name?: string;
   @IsOptional()
   @IsString()
   @IsDefined()
+  @IsNotEmpty()
   description?: string;
   @IsOptional()
   @IsDefined()

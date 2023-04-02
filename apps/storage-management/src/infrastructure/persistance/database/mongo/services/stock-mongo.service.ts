@@ -1,13 +1,4 @@
-import {
-  Observable,
-  flatMap,
-  map,
-  mergeMap,
-  of,
-  switchMap,
-  tap,
-  throwError,
-} from 'rxjs';
+import { Observable, mergeMap, of, switchMap, throwError } from 'rxjs';
 import { LocationMongoRepository, StockMongoRepository } from '../repositories';
 import { StockMongoModel } from '../models';
 import { Injectable, NotFoundException } from '@nestjs/common';
