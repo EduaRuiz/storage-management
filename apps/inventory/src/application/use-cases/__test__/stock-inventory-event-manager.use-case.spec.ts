@@ -57,6 +57,10 @@ describe('StockStorageEventManagerUseCase', () => {
     };
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should return the stock when the quantity is the same as the updated quantity', (done) => {
       // Arrange

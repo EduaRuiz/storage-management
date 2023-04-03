@@ -24,6 +24,10 @@ describe('UpdateProductInfoUseCase', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should update the product entity and publish an event', (done) => {
       // Arrange

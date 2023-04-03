@@ -34,6 +34,10 @@ describe('RemoveProductUseCase', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should remove the product entity and publish an event', (done) => {
       // Arrange

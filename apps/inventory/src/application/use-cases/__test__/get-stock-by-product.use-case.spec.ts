@@ -14,6 +14,10 @@ describe('GetStocksByProductUseCase', () => {
     useCase = new GetStocksByProductUseCase(stockService);
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should return an Observable of StockDomainModel[]', (done) => {
       // Arrange

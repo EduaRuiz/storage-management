@@ -23,6 +23,10 @@ describe('RegisterNewLocationUseCase', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should create a new location and publish an event', (done) => {
       // Arrange

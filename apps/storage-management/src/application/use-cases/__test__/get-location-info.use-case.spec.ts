@@ -14,6 +14,10 @@ describe('GetLocationInfoUseCase', () => {
     useCase = new GetLocationInfoUseCase(location$);
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should return the location information for a given entity ID', (done) => {
       // Arrange

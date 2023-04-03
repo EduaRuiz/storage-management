@@ -23,6 +23,10 @@ describe('RegisterNewProductUseCase', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should create a new product and publish an event', (done) => {
       // Arrange

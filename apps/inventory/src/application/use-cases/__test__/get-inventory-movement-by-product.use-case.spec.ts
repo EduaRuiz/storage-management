@@ -14,6 +14,10 @@ describe('GetInventoryMovementsByProductUseCase', () => {
     useCase = new GetInventoryMovementsByProductUseCase(inventoryMovement$);
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should return an Observable of InventoryMovementDomainModel[]', (done) => {
       // Arrange

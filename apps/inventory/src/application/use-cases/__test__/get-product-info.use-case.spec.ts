@@ -14,6 +14,10 @@ describe('GetProductInfoUseCase', () => {
     getProductInfo = new GetProductInfoUseCase(product$);
   });
 
+  it('should be defined', () => {
+    expect(getProductInfo).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should return an Observable of ProductDomainModel', (done) => {
       // Arrange

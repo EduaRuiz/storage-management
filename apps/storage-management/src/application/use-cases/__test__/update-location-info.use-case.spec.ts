@@ -24,6 +24,10 @@ describe('UpdateLocationInfoUseCase', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should update the location information and publish an event', (done) => {
       // Arrange

@@ -29,6 +29,10 @@ describe('StockInventoryEventManagerUseCase', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     const stockEvent: IStockEventFromInventoryDomain = {
       _id: 'stockEventId',

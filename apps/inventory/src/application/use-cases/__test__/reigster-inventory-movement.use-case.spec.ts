@@ -59,6 +59,10 @@ describe('RegisterInventoryMovementUseCase', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(useCase).toBeDefined();
+  });
+
   describe('execute', () => {
     it('should register a new inventory movement', (done) => {
       const expectedStock = {

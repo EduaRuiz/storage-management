@@ -90,6 +90,10 @@ describe('RegisterInventoryTransferUseCase', () => {
       } as unknown as InventoryTransferDomainModel;
     });
 
+    it('should be defined', () => {
+      expect(registerInventoryTransferUseCase).toBeDefined();
+    });
+
     describe('when product does not exist', () => {
       // Arrange
       beforeEach(() => {
