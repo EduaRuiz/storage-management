@@ -7,7 +7,7 @@ import {
 import { RegisterInventoryMovementUseCase } from '..';
 import { RegisteredInventoryMovementDomainEvent } from '@inventory/domain/events/publishers';
 import { IInventoryMovementDomainDto } from '@inventory/domain/dtos';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { StockDomainModel } from '@inventory/domain/models';
 import { NotFoundException } from '@nestjs/common';
 
@@ -97,153 +97,157 @@ describe('RegisterInventoryMovementUseCase', () => {
       });
     });
 
-    // it('should throw an error if location does not exist', (done) => {
-    //   (locationExistService.exist as jest.Mock).mockRejectedValue(
-    //     of(new Error('Location not found')),
-    //   );
-    //   (productService.findOneById as jest.Mock).mockReturnValue(
-    //     of({ id: 'product-id' }),
-    //   );
-    //   (stockService.findByProductIdAndLocationId as jest.Mock).mockReturnValue(
-    //     of(undefined),
-    //   );
-    //   (stockService.createStock as jest.Mock).mockReturnValue(of({}));
-    //   (inventoryMovementService.create as jest.Mock).mockReturnValue(of({}));
+    it('should throw an error if location does not exist', (done) => {
+      // Arrange
+      jest
+        .spyOn(locationExistService, 'exist')
+        .mockReturnValue(throwError(new Error('Location not found')));
 
-    //   const result$ = useCase.execute(inventoryMovementDto, token);
-    //   result$.subscribe({
-    //     error: (error) => {
-    //       expect(error).toEqual(new Error('Location does not exist'));
-    //       expect(locationExistService.exist).toHaveBeenCalledTimes(1);
-    //       expect(locationExistService.exist).toHaveBeenCalledWith(
-    //         'location-id',
-    //         'token',
-    //       );
-    //       done();
-    //     },
-    //   });
-    // });
+      // Act
+      const result$ = useCase.execute(inventoryMovementDto, token);
 
-    // it('should create a new stock', (done) => {
-    //   inventoryMovementDto.typeMovement = 'OUT';
-    //   (locationExistService.exist as jest.Mock).mockReturnValue(of(true));
-    //   (stockService.findByProductIdAndLocationId as jest.Mock).mockReturnValue(
-    //     of(new NotFoundException('Stock not found')),
-    //   );
-    //   (productService.findOneById as jest.Mock)(
-    //     stockService.findByProductIdAndLocationId as jest.Mock,
-    //   ).mockRejectedValue(of(new NotFoundException('Stock not found')));
-    //   (stockService.createStock as jest.Mock).mockReturnValue(of({}));
-    //   (inventoryMovementService.create as jest.Mock).mockReturnValue(of({}));
+      // Assert
+      result$.subscribe({
+        error: (error) => {
+          expect(error).toBeInstanceOf(Error);
+          expect(locationExistService.exist).toHaveBeenCalledTimes(1);
+          expect(locationExistService.exist).toHaveBeenCalledWith(
+            'location-id',
+            'token',
+          );
+          done();
+        },
+      });
+    });
 
-    //   const result$ = useCase.execute(inventoryMovementDto, token);
-    //   result$.subscribe({
-    //     next: (result) => {
-    //       expect(result).toEqual({});
-    //       expect(locationExistService.exist).toHaveBeenCalledTimes(1);
-    //       expect(locationExistService.exist).toHaveBeenCalledWith(
-    //         'location-id',
-    //         'token',
-    //       );
-    //       expect(productService.findOneById).toHaveBeenCalledTimes(1);
-    //       expect(productService.findOneById).toHaveBeenCalledWith(
-    //         'product-id',
-    //         'token',
-    //       );
-    //       expect(
-    //         stockService.findByProductIdAndLocationId,
-    //       ).toHaveBeenCalledTimes(1);
-    //       expect(
-    //         stockService.findByProductIdAndLocationId,
-    //       ).toHaveBeenCalledWith('product-id', 'location-id', 'token');
-    //       expect(stockService.createStock).toHaveBeenCalledTimes(1);
-    //       expect(inventoryMovementService.create).toHaveBeenCalledTimes(1);
-    //       expect(inventoryMovementService.create).toHaveBeenCalledWith(
-    //         {
-    //           productId: 'product-id',
-    //           locationId: 'location-id',
-    //           quantity: 5,
-    //           typeMovement: 'IN',
-    //         },
-    //         'token',
-    //       );
-    //       done();
-    //     },
-    //   });
-    // });
+    it('should create a new stock', (done) => {
+      inventoryMovementDto.typeMovement = 'OUT';
+      (locationExistService.exist as jest.Mock).mockReturnValue(of(true));
+      (stockService.findByProductIdAndLocationId as jest.Mock).mockReturnValue(
+        of(new NotFoundException('Stock not found')),
+      );
+      jest
+        .spyOn(productService, 'findOneById')
+        .mockReturnValue(
+          throwError(new NotFoundException('Product not found')),
+        );
+      (stockService.createStock as jest.Mock).mockReturnValue(of({}));
+      (inventoryMovementService.create as jest.Mock).mockReturnValue(of({}));
 
-    // it('should throw an error if product does not exist', (done) => {
-    //   (locationExistService.exist as jest.Mock).mockReturnValue(of(true));
-    //   (productService.findOneById as jest.Mock).mockReturnValue(
-    //     of(new Error('Product does not exist')),
-    //   );
-    //   (
-    //     stockService.findByProductIdAndLocationId as jest.Mock
-    //   ).mockRejectedValue(of(new NotFoundException('Stock not found')));
-    //   (stockService.createStock as jest.Mock).mockReturnValue(of({}));
-    //   (inventoryMovementService.create as jest.Mock).mockReturnValue(of({}));
+      const result$ = useCase.execute(inventoryMovementDto, token);
+      result$.subscribe({
+        next: (result) => {
+          expect(result).toEqual({});
+          expect(locationExistService.exist).toHaveBeenCalledTimes(1);
+          expect(locationExistService.exist).toHaveBeenCalledWith(
+            'location-id',
+            'token',
+          );
+          expect(
+            stockService.findByProductIdAndLocationId,
+          ).toHaveBeenCalledTimes(1);
+          expect(
+            stockService.findByProductIdAndLocationId,
+          ).toHaveBeenCalledWith('product-id', 'location-id');
+          expect(inventoryMovementService.create).toHaveBeenCalledTimes(1);
+          done();
+        },
+      });
+    });
 
-    //   const result$ = useCase.execute(inventoryMovementDto, token);
-    //   result$.subscribe({
-    //     error: (error) => {
-    //       expect(error).toEqual(new Error('Product does not exist'));
-    //       expect(locationExistService.exist).toHaveBeenCalledTimes(1);
-    //       expect(locationExistService.exist).toHaveBeenCalledWith(
-    //         'location-id',
-    //         'token',
-    //       );
-    //       expect(productService.findOneById).toHaveBeenCalledTimes(1);
-    //       expect(productService.findOneById).toHaveBeenCalledWith(
-    //         'product-id',
-    //         'token',
-    //       );
-    //       expect(
-    //         stockService.findByProductIdAndLocationId,
-    //       ).toHaveBeenCalledTimes(0);
-    //       expect(stockService.createStock).toHaveBeenCalledTimes(0);
-    //       expect(inventoryMovementService.create).toHaveBeenCalledTimes(0);
-    //       done();
-    //     },
-    //   });
-    // });
+    it('should throw an error if product does not exist', (done) => {
+      (locationExistService.exist as jest.Mock).mockReturnValue(of(true));
+      jest
+        .spyOn(stockService, 'findByProductIdAndLocationId')
+        .mockReturnValue(throwError(new NotFoundException('Stock not found')));
 
-    // it('should update an existing stock', async () => {
-    //   (locationExistService.locationExist as jest.Mock).mockReturnValue(
-    //     of(true),
-    //   );
-    //   (productService.findById as jest.Mock).mockReturnValue(
-    //     of({ id: 'product-id' }),
-    //   );
-    //   (stockService.findByProductIdAndLocationId as jest.Mock).mockReturnValue(
-    //     of(new StockDomainModel('product-id', 'location-id', 10)),
-    //   );
-    //   (stockService.save as jest.Mock).mockReturnValue(of({}));
-    //   (inventoryMovementService.save as jest.Mock).mockReturnValue(of({}));
+      jest
+        .spyOn(productService, 'findOneById')
+        .mockReturnValue(
+          throwError(new NotFoundException('Product not found')),
+        );
+      (stockService.createStock as jest.Mock).mockReturnValue(of({}));
+      (inventoryMovementService.create as jest.Mock).mockReturnValue(of({}));
 
-    //   const result = await useCase.execute(inventoryMovementDto, token);
+      const result$ = useCase.execute(inventoryMovementDto, token);
+      result$.subscribe({
+        error: (error) => {
+          expect(error).toBeInstanceOf(Error);
+          expect(locationExistService.exist).toHaveBeenCalledTimes(1);
+          expect(locationExistService.exist).toHaveBeenCalledWith(
+            'location-id',
+            'token',
+          );
+          expect(productService.findOneById).toHaveBeenCalledTimes(1);
+          expect(stockService.createStock).toHaveBeenCalledTimes(0);
+          expect(inventoryMovementService.create).toHaveBeenCalledTimes(0);
+          done();
+        },
+      });
+    });
 
-    //   expect(result).toEqual({});
+    it('should throw an error if product does not exist', (done) => {
+      // Arrange
+      inventoryMovementDto.typeMovement = 'IN';
+      (locationExistService.exist as jest.Mock).mockReturnValue(of(true));
+      jest
+        .spyOn(stockService, 'findByProductIdAndLocationId')
+        .mockReturnValue(throwError(new NotFoundException('Stock not found')));
 
-    //   expect(locationExistService.locationExist).toHaveBeenCalledTimes(1);
-    //   expect(locationExistService.locationExist).toHaveBeenCalledWith(
-    //     'location-id',
-    //   );
+      (productService.findOneById as jest.Mock).mockReturnValue(
+        throwError(new NotFoundException('Product not found')),
+      );
+      (inventoryMovementService.create as jest.Mock).mockReturnValue(of({}));
 
-    //   expect(productService.findById).toHaveBeenCalledTimes(1);
-    //   expect(productService.findById).toHaveBeenCalledWith('product-id');
+      // Act
+      const result$ = useCase.execute(inventoryMovementDto, token);
 
-    //   expect(stockService.findByProductIdAndLocationId).toHaveBeenCalledTimes(
-    //     1,
-    //   );
-    //   expect(stockService.findByProductIdAndLocationId).toHaveBeenCalledWith(
-    //     'product-id',
-    //     'location-id',
-    //   );
+      // Assert
+      result$.subscribe({
+        error: (error) => {
+          expect(error).toBeInstanceOf(Error);
+          expect(locationExistService.exist).toHaveBeenCalledTimes(1);
+          expect(locationExistService.exist).toHaveBeenCalledWith(
+            'location-id',
+            'token',
+          );
+          done();
+        },
+      });
+    });
 
-    //   expect(stockService.save).toHaveBeenCalledTimes(1);
-    //   expect(stockService.save).toHaveBeenCalledWith(
-    //     new StockDomainModel('product-id', 'location-id', 15),
-    //   );
-    // });
+    it('should create a new stock', (done) => {
+      // Arrange
+      inventoryMovementDto.typeMovement = 'IN';
+      (locationExistService.exist as jest.Mock).mockReturnValue(of(true));
+      jest
+        .spyOn(stockService, 'findByProductIdAndLocationId')
+        .mockReturnValue(throwError(new NotFoundException('Stock not found')));
+
+      (productService.findOneById as jest.Mock).mockReturnValue(
+        of({ id: 'product-id' }),
+      );
+      (stockService.createStock as jest.Mock).mockReturnValue(of({}));
+      (inventoryMovementService.create as jest.Mock).mockReturnValue(of({}));
+
+      // Act
+      const result$ = useCase.execute(inventoryMovementDto, token);
+
+      // Assert
+      result$.subscribe({
+        next: (result) => {
+          expect(result).toEqual({});
+          expect(locationExistService.exist).toHaveBeenCalledTimes(1);
+          expect(locationExistService.exist).toHaveBeenCalledWith(
+            'location-id',
+            'token',
+          );
+          expect(
+            stockService.findByProductIdAndLocationId,
+          ).toHaveBeenCalledTimes(1);
+          done();
+        },
+      });
+    });
   });
 });

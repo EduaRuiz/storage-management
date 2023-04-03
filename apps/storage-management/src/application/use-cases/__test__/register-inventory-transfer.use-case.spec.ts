@@ -115,72 +115,58 @@ describe('RegisterInventoryTransferUseCase', () => {
           },
         });
       });
+
+      it('should not call inventoryTransferService.generateTransfer', (done) => {
+        // Act
+        const result$ = registerInventoryTransferUseCase.execute(dto, token);
+
+        // Assert
+        result$.subscribe({
+          error: () => {
+            expect(
+              inventoryTransferService.generateTransfer,
+            ).not.toHaveBeenCalled();
+            done();
+          },
+        });
+      });
+
+      it('should validateLocationAndStock before call inventoryTransferService.generateTransfer', (done) => {
+        // Arrange
+        jest
+          .spyOn(productExistService, 'exist')
+          .mockReturnValue(of(true) as any);
+        jest
+          .spyOn(locationService, 'getLocationById')
+          .mockReturnValue(of(locationIn) as any);
+        jest
+          .spyOn(stockService, 'findOneByLocationIdAndProductId')
+          .mockReturnValue(of(stockIn) as any);
+
+        jest
+          .spyOn(inventoryTransferService, 'generateTransfer')
+          .mockReturnValue(of(transfer) as any);
+        jest
+          .spyOn(stockService, 'createStock')
+          .mockReturnValue(of(true) as any);
+
+        jest
+          .spyOn(registeredInventoryTransferDomainEvent, 'publish')
+          .mockReturnValue(of(true) as any);
+
+        // Act
+        const result$ = registerInventoryTransferUseCase.execute(dto, token);
+
+        // Assert
+        result$.subscribe({
+          next: () => {
+            expect(locationService.getLocationById).toHaveBeenCalledWith(
+              dto.locationInId,
+            );
+            done();
+          },
+        });
+      });
     });
-
-    // describe('when product exists', () => {
-    //   // Arrange
-    //   beforeEach(() => {
-    //     productExistService.exist = jest.fn().mockReturnValue(of(true));
-    //   });
-
-    //   describe('when location and stock are valid', () => {
-    //     beforeEach(() => {
-    //       locationService.getLocationById = jest
-    //         .fn()
-    //         .mockReturnValue(of(locationIn));
-    //       stockService.findOneByLocationIdAndProductId = jest
-    //         .fn()
-    //         .mockReturnValueOnce(of(stockIn))
-    //         .mockReturnValueOnce(of(stockOut));
-    //       stockService.createStock = jest.fn().mockReturnValue(of(stockIn));
-    //       inventoryTransferService.generateTransfer = jest
-    //         .fn()
-    //         .mockReturnValue(of(transfer));
-    //       registeredInventoryTransferDomainEvent.publish = jest
-    //         .fn()
-    //         .mockReturnValue(of(true));
-    //     });
-
-    //     it('should create inventory transfer and return it', (done) => {
-    //       // Act
-    //       const result$ = registerInventoryTransferUseCase.execute(dto, token);
-
-    //       console.log(
-    //         result$.subscribe({
-    //           next: (result) => {
-    //             console.log(result);
-    //           },
-    //           error: (err) => {
-    //             console.log(err);
-    //           },
-    //           complete: () => {
-    //             console.log('complete');
-    //           },
-    //         }),
-    //       );
-    //       // Assert
-    //       result$.subscribe({
-    //         next: (result) => {
-    //           expect(result).toEqual(transfer);
-    //           expect(
-    //             inventoryTransferService.generateTransfer,
-    //           ).toHaveBeenCalledWith({
-    //             dateTime: expect.any(Date),
-    //             quantity: dto.quantity,
-    //             stockIn,
-    //             stockOut,
-    //           });
-    //           expect(
-    //             registeredInventoryTransferDomainEvent.publish,
-    //           ).toHaveBeenCalledWith({
-    //             transfer,
-    //             token,
-    //           });
-    //           done();
-    //         },
-    //       });
-    //     });
-    //   });
-    // });
   });
 });

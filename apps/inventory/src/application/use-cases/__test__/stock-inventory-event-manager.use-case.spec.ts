@@ -3,7 +3,7 @@ import {
   IProductDomainService,
   IStockDomainService,
 } from '@inventory/domain/services';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { StockStorageEventManagerUseCase } from '..';
 import { ProductDomainModel, StockDomainModel } from '@inventory/domain/models';
 
@@ -89,68 +89,50 @@ describe('StockStorageEventManagerUseCase', () => {
       });
     });
 
-    //   it('should update the stock quantity when the quantity is different from the updated quantity', (done) => {
-    //     const findByProductIdAndLocationIdSpy = jest
-    //       .spyOn(stock$, 'findByProductIdAndLocationId')
-    //       .mockReturnValue(of(stock));
-    //     const updateQuantitySpy = jest
-    //       .spyOn(stock$, 'updateQuantity')
-    //       .mockReturnValue(of(stock));
-    //     jest.spyOn(product$, 'findOneById').mockReturnValue(of(product));
-    //     jest.spyOn(stock$, 'createStock').mockReturnValue(of(stock));
+    it('should validateIfStockExists when the quantity is the same as the updated quantity', (done) => {
+      // Arrange
+      jest
+        .spyOn(stock$, 'findByProductIdAndLocationId')
+        .mockReturnValue(throwError(new Error('Stock not found')));
+      jest.spyOn(product$, 'findOneById').mockReturnValue(of(product));
+      jest.spyOn(stock$, 'createStock').mockReturnValue(of(stock));
+      jest.spyOn(stock$, 'updateQuantity').mockReturnValue(of(stock));
 
-    //     const result$: Observable<StockDomainModel> = useCase.execute({
-    //       ...stockUpdated,
-    //       quantity: 20,
-    //     });
+      // Act
+      const result$: Observable<StockDomainModel> =
+        useCase.execute(stockUpdated);
 
-    //     expect(findByProductIdAndLocationIdSpy).toHaveBeenCalledWith(
-    //       stockUpdated.productId,
-    //       stockUpdated.location._id,
-    //     );
-    //     expect(updateQuantitySpy).toHaveBeenCalledWith(
-    //       stock._id,
-    //       stockUpdated.quantity,
-    //     );
-    //     result$.subscribe({
-    //       next: (result) => {
-    //         expect(result.quantity).toEqual(stockUpdated.quantity);
-    //         done();
-    //       },
-    //     });
-    //   });
+      // Assert
+      result$.subscribe({
+        next: (result) => {
+          expect(result).toEqual(stock);
+          done();
+        },
+      });
+    });
 
-    //   it('should create a new stock when the stock is not found', (done) => {
-    //     const findByProductIdAndLocationIdSpy = jest
-    //       .spyOn(stock$, 'findByProductIdAndLocationId')
-    //       .mockRejectedValue(of(new Error()) as never);
-    //     const createStockSpy = jest
-    //       .spyOn(stock$, 'createStock')
-    //       .mockReturnValue(of(stock));
-    //     const findOneByIdSpy = jest
-    //       .spyOn(product$, 'findOneById')
-    //       .mockReturnValue(of(product));
+    it('should createStock when product is not found', (done) => {
+      // Arrange
+      jest
+        .spyOn(stock$, 'findByProductIdAndLocationId')
+        .mockReturnValue(throwError(new Error('Stock not found')));
+      jest
+        .spyOn(product$, 'findOneById')
+        .mockReturnValue(throwError(new Error('Product not found')));
+      jest.spyOn(stock$, 'createStock').mockReturnValue(of(stock));
+      jest.spyOn(stock$, 'updateQuantity').mockReturnValue(of(stock));
 
-    //     const result$: Observable<StockDomainModel> =
-    //       useCase.execute(stockUpdated);
+      // Act
+      const result$: Observable<StockDomainModel> =
+        useCase.execute(stockUpdated);
 
-    //     expect(findByProductIdAndLocationIdSpy).toHaveBeenCalledWith(
-    //       stockUpdated.productId,
-    //       stockUpdated.location._id,
-    //     );
-    //     expect(createStockSpy).toHaveBeenCalledWith({
-    //       locationId: stockUpdated.location._id,
-    //       productId: stockUpdated.productId,
-    //       quantity: stockUpdated.quantity,
-    //     });
-    //     expect(findOneByIdSpy).toHaveBeenCalledWith(stockUpdated.productId);
-    //     result$.subscribe({
-    //       next: (result) => {
-    //         expect(result.product.name).toEqual(product.name);
-    //         expect(result.quantity).toEqual(stockUpdated.quantity);
-    //         done();
-    //       },
-    //     });
-    //   });
+      // Assert
+      result$.subscribe({
+        error: (error) => {
+          expect(error).toEqual(new Error('Product not found'));
+          done();
+        },
+      });
+    });
   });
 });

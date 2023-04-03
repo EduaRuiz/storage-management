@@ -68,6 +68,7 @@ describe('ProductMongoRepository', () => {
       const message = 'Product create conflict';
       jest
         .spyOn(model, 'create')
+        /* A jest function that allows you to mock a function and return a value. */
         .mockRejectedValue(of(new ConflictException('Conflict')));
 
       // Act & Assert
