@@ -1,1 +1,1 @@
-export * from './jwt-payload.interface';
+export * from './registered-inventory-transfer.map';
