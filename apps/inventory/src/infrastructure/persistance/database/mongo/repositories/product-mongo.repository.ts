@@ -19,14 +19,34 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ProductMongoModel } from '../models';
 
+/**
+ * Repositorio de productos en MongoDB
+ *
+ * @export
+ * @class ProductMongoRepository
+ * @implements {IRepositoryBase<ProductMongoModel>}
+ */
 export class ProductMongoRepository
   implements IRepositoryBase<ProductMongoModel>
 {
+  /**
+   * Crea una instancia de ProductMongoRepository
+   *
+   * @param {Model<ProductMongoModel>} productMongoModel Modelo de datos de producto para MongoDB
+   * @memberof ProductMongoRepository
+   */
   constructor(
     @InjectModel(ProductMongoModel.name)
     private productMongoModel: Model<ProductMongoModel>,
   ) {}
 
+  /**
+   * Crear un producto
+   *
+   * @param {ProductMongoModel} entity Producto
+   * @return {Observable<ProductMongoModel>} Observable de producto creado
+   * @memberof ProductMongoRepository
+   */
   create(entity: ProductMongoModel): Observable<ProductMongoModel> {
     return from(this.productMongoModel.create(entity)).pipe(
       catchError((error: Error) => {
@@ -35,6 +55,14 @@ export class ProductMongoRepository
     );
   }
 
+  /**
+   * Actualizar un producto
+   *
+   * @param {string} entityId ID del producto
+   * @param {ProductMongoModel} entity Producto
+   * @return {Observable<ProductMongoModel>} Observable de producto actualizado
+   * @memberof ProductMongoRepository
+   */
   update(
     entityId: string,
     entity: ProductMongoModel,
@@ -59,6 +87,13 @@ export class ProductMongoRepository
     );
   }
 
+  /**
+   * Eliminar un producto
+   *
+   * @param {string} entityId ID del producto
+   * @return {Observable<ProductMongoModel>} Observable de producto eliminado
+   * @memberof ProductMongoRepository
+   */
   delete(entityId: string): Observable<ProductMongoModel> {
     return this.findOneById(entityId).pipe(
       switchMap(() => {
@@ -72,6 +107,12 @@ export class ProductMongoRepository
     );
   }
 
+  /**
+   * Obtener todos los productos
+   *
+   * @return {Observable<ProductMongoModel[]>} Observable de productos
+   * @memberof ProductMongoRepository
+   */
   findAll(): Observable<ProductMongoModel[]> {
     return from(this.productMongoModel.find().exec()).pipe(
       map((entities: ProductMongoModel[]) => {
@@ -80,6 +121,13 @@ export class ProductMongoRepository
     );
   }
 
+  /**
+   * Obtener un producto por su ID
+   *
+   * @param {string} entityId ID del producto
+   * @return {Observable<ProductMongoModel>} Observable de producto
+   * @memberof ProductMongoRepository
+   */
   findOneById(entityId: string): Observable<ProductMongoModel> {
     return from(
       this.productMongoModel.findById({ _id: entityId.toString() }),

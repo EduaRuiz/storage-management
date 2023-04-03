@@ -10,6 +10,12 @@ import { MessagingModule } from './infrastructure/messaging';
 import { HttpModule } from '@nestjs/axios';
 import { LocationExistService } from './infrastructure/utils/services';
 
+/**
+ * Módulo de inventario
+ *
+ * @export
+ * @class InventoryModule
+ */
 @Module({
   imports: [
     ConfigModule.forRoot({

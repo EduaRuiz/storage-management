@@ -18,14 +18,34 @@ import { InventoryMovementMongoModel } from '../models';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+/**
+ * Repositorio de movimientos de inventario en MongoDB
+ *
+ * @export
+ * @class InventoryMovementMongoRepository
+ * @implements {IRepositoryBase<InventoryMovementMongoModel>}
+ */
 export class InventoryMovementMongoRepository
   implements IRepositoryBase<InventoryMovementMongoModel>
 {
+  /**
+   * Crea una instancia de InventoryMovementMongoRepository
+   *
+   * @param {Model<InventoryMovementMongoModel>} inventoryMovementMongoModel Modelo de datos de movimiento de inventario para MongoDB
+   * @memberof InventoryMovementMongoRepository
+   */
   constructor(
     @InjectModel(InventoryMovementMongoModel.name)
     private inventoryMovementMongoModel: Model<InventoryMovementMongoModel>,
   ) {}
 
+  /**
+   * Crear un movimiento de inventario
+   *
+   * @param {InventoryMovementMongoModel} entity Movimiento de inventario
+   * @return  {Observable<InventoryMovementMongoModel>} Observable de movimiento de inventario creado
+   * @memberof InventoryMovementMongoRepository
+   */
   create(
     entity: InventoryMovementMongoModel,
   ): Observable<InventoryMovementMongoModel> {
@@ -39,6 +59,14 @@ export class InventoryMovementMongoRepository
     );
   }
 
+  /**
+   * Actualizar un movimiento de inventario
+   *
+   * @param {string} entityId Identificador único del movimiento de inventario
+   * @param {InventoryMovementMongoModel} entity Movimiento de inventario
+   * @return  {Observable<InventoryMovementMongoModel>} Observable de movimiento de inventario actualizado
+   * @memberof InventoryMovementMongoRepository
+   */
   update(
     entityId: string,
     entity: InventoryMovementMongoModel,
@@ -63,6 +91,13 @@ export class InventoryMovementMongoRepository
     );
   }
 
+  /**
+   * Eliminar un movimiento de inventario
+   *
+   * @param {string} entityId Identificador único del movimiento de inventario
+   * @return  {Observable<InventoryMovementMongoModel>} Observable de movimiento de inventario eliminado
+   * @memberof InventoryMovementMongoRepository
+   */
   delete(entityId: string): Observable<InventoryMovementMongoModel> {
     return this.findOneById(entityId).pipe(
       switchMap(() => {
@@ -75,6 +110,12 @@ export class InventoryMovementMongoRepository
     );
   }
 
+  /**
+   * Obtener todos los movimientos de inventario
+   *
+   * @return {Observable<InventoryMovementMongoModel[]>} Observable de lista de movimientos de inventario
+   * @memberof InventoryMovementMongoRepository
+   */
   findAll(): Observable<InventoryMovementMongoModel[]> {
     return from(this.inventoryMovementMongoModel.find().exec()).pipe(
       map((entities: InventoryMovementMongoModel[]) => {
@@ -83,6 +124,13 @@ export class InventoryMovementMongoRepository
     );
   }
 
+  /**
+   * Obtener un movimiento de inventario por su identificador único
+   *
+   * @param {string} entityId Identificador único del movimiento de inventario
+   * @return {Observable<InventoryMovementMongoModel>} Observable de movimiento de inventario
+   * @memberof InventoryMovementMongoRepository
+   */
   findOneById(entityId: string): Observable<InventoryMovementMongoModel> {
     return from(
       this.inventoryMovementMongoModel.findById(

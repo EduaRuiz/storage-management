@@ -19,12 +19,32 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { StockMongoModel } from '../models';
 
+/**
+ * Repositorio de stock en MongoDB
+ *
+ * @export
+ * @class StockMongoRepository
+ * @implements {IRepositoryBase<StockMongoModel>}
+ */
 export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
+  /**
+   * Crea una instancia de StockMongoRepository
+   *
+   * @param {Model<StockMongoModel>} stockMongoModel Modelo de datos de stock para MongoDB
+   * @memberof StockMongoRepository
+   */
   constructor(
     @InjectModel(StockMongoModel.name)
     private stockMongoModel: Model<StockMongoModel>,
   ) {}
 
+  /**
+   * Crear un stock
+   *
+   * @param {StockMongoModel} entity Stock
+   * @return {Observable<StockMongoModel>} Observable de stock creado
+   * @memberof StockMongoRepository
+   */
   create(entity: StockMongoModel): Observable<StockMongoModel> {
     return from(this.stockMongoModel.create(entity)).pipe(
       catchError((error: Error) => {
@@ -33,6 +53,14 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
     );
   }
 
+  /**
+   * Actualizar un stock
+   *
+   * @param {string} entityId ID del stock
+   * @param {StockMongoModel} entity Stock
+   * @return {Observable<StockMongoModel>} Observable de stock actualizado
+   * @memberof StockMongoRepository
+   */
   update(
     entityId: string,
     entity: StockMongoModel,
@@ -54,6 +82,13 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
     );
   }
 
+  /**
+   * Eliminar un stock
+   *
+   * @param {string} entityId ID del stock
+   * @return {Observable<StockMongoModel>} Observable de stock eliminado
+   * @memberof StockMongoRepository
+   */
   delete(entityId: string): Observable<StockMongoModel> {
     return this.findOneById(entityId).pipe(
       switchMap(() => {
@@ -65,6 +100,12 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
     );
   }
 
+  /**
+   * Obtener todos los stocks
+   *
+   * @return {Observable<StockMongoModel[]>} Observable de stocks
+   * @memberof StockMongoRepository
+   */
   findAll(): Observable<StockMongoModel[]> {
     return from(
       this.stockMongoModel.find({}, {}, { populate: 'product' }).exec(),
@@ -75,6 +116,13 @@ export class StockMongoRepository implements IRepositoryBase<StockMongoModel> {
     );
   }
 
+  /**
+   * Obtener un stock por ID
+   *
+   * @param {string} entityId ID del stock
+   * @return {Observable<StockMongoModel>} Observable de stock
+   * @memberof StockMongoRepository
+   */
   findOneById(entityId: string): Observable<StockMongoModel> {
     return from(
       this.stockMongoModel.findById(

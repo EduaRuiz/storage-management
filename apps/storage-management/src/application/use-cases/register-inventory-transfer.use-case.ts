@@ -16,7 +16,23 @@ import {
   IStockDomainService,
 } from '../../domain/services';
 
+/**
+ * Caso de uso de registrar transferencia de inventario
+ *
+ * @export
+ * @class RegisterInventoryTransferUseCase
+ */
 export class RegisterInventoryTransferUseCase {
+  /**
+   * Crea una instancia de RegisterInventoryTransferUseCase
+   *
+   * @param {IInventoryTransferDomainService} inventoryTransfer$ Servicio de dominio de transferencia de inventario
+   * @param {IStockDomainService} stock$ Servicio de dominio de stock
+   * @param {ILocationDomainService} location$ Servicio de dominio de ubicación
+   * @param {IProductExistDomainService} productExist$ Servicio de dominio de existencia de producto
+   * @param {RegisteredInventoryTransferDomainEvent} registeredInventoryTransferDomainEvent Evento de dominio de transferencia de inventario registrada
+   * @memberof RegisterInventoryTransferUseCase
+   */
   constructor(
     private readonly inventoryTransfer$: IInventoryTransferDomainService,
     private readonly stock$: IStockDomainService,
@@ -25,6 +41,14 @@ export class RegisterInventoryTransferUseCase {
     private readonly registeredInventoryTransferDomainEvent: RegisteredInventoryTransferDomainEvent,
   ) {}
 
+  /**
+   * Ejecutar caso de uso
+   *
+   * @param {IInventoryTransferDomainDto} dto Dto de transferencia de inventario
+   * @param {string} token Token de usuario
+   * @return {Observable<InventoryTransferDomainModel>} Observable de transferencia de inventario
+   * @memberof RegisterInventoryTransferUseCase
+   */
   execute(
     dto: IInventoryTransferDomainDto,
     token: string,
@@ -45,6 +69,14 @@ export class RegisterInventoryTransferUseCase {
     );
   }
 
+  /**
+   * Validar ubicación y stock
+   *
+   * @private
+   * @param {IInventoryTransferDomainDto} dto Dto de transferencia de inventario
+   * @return {Observable<boolean>} Observable de booleano
+   * @memberof RegisterInventoryTransferUseCase
+   */
   private validateLocationAndStock(
     dto: IInventoryTransferDomainDto,
   ): Observable<boolean> {
@@ -57,6 +89,14 @@ export class RegisterInventoryTransferUseCase {
     );
   }
 
+  /**
+   * Validar stock y crear stock si no existe
+   *
+   * @private
+   * @param {IInventoryTransferDomainDto} dto Dto de transferencia de inventario
+   * @return {Observable<boolean>} Observable de booleano
+   * @memberof RegisterInventoryTransferUseCase
+   */
   private validateStock(dto: IInventoryTransferDomainDto): Observable<boolean> {
     return this.validateIfStockIsEnough(
       dto.locationOutId,
@@ -77,6 +117,16 @@ export class RegisterInventoryTransferUseCase {
     );
   }
 
+  /**
+   * Validar si el stock es suficiente para la transferencia
+   *
+   * @private
+   * @param {string} locationId Id de ubicación
+   * @param {string} productId Id de producto
+   * @param {number} quantity Cantidad de producto
+   * @return {Observable<boolean>} Observable de booleano
+   * @memberof RegisterInventoryTransferUseCase
+   */
   private validateIfStockIsEnough(
     locationId: string,
     productId: string,
@@ -91,6 +141,14 @@ export class RegisterInventoryTransferUseCase {
       );
   }
 
+  /**
+   * Validar si el stock existe y crearlo si no existe
+   *
+   * @private
+   * @param {IInventoryTransferDomainDto} dto Dto de transferencia de inventario
+   * @return {Observable<boolean>} Observable de booleano
+   * @memberof RegisterInventoryTransferUseCase
+   */
   private validateStockExist(
     dto: IInventoryTransferDomainDto,
   ): Observable<boolean> {
@@ -104,6 +162,14 @@ export class RegisterInventoryTransferUseCase {
       );
   }
 
+  /**
+   * Crear entidad de transferencia de inventario
+   *
+   * @private
+   * @param {IInventoryTransferDomainDto} dto Dto de transferencia de inventario
+   * @return {Observable<InventoryTransferDomainModel>} Observable de transferencia de inventario
+   * @memberof RegisterInventoryTransferUseCase
+   */
   private createEntity(
     dto: IInventoryTransferDomainDto,
   ): Observable<InventoryTransferDomainModel> {
@@ -126,6 +192,15 @@ export class RegisterInventoryTransferUseCase {
     );
   }
 
+  /**
+   * Crear stock en ubicación de entrada
+   *
+   * @private
+   * @param {string} locationId Id de ubicación
+   * @param {string} productId Id de producto
+   * @return {Observable<StockDomainModel>} Observable de stock
+   * @memberof RegisterInventoryTransferUseCase
+   */
   private createStockIn(
     locationId: string,
     productId: string,

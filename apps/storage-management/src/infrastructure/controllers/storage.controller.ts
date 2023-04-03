@@ -37,9 +37,27 @@ import {
 import { ProductExistService } from '../utils/services';
 import { JwtGuard } from '../utils/guards';
 
+/**
+ * Controlador de almacenamiento
+ *
+ * @export
+ * @class StorageController
+ */
 @Controller('storage')
 // @UseFilters(MongoServerErrorExceptionFilter)
 export class StorageController {
+  /**
+   * Crea una instancia de StorageController
+   *
+   * @param {LocationService} locationService Servicio de persistencia de ubicación
+   * @param {StockService} stockService Servicio de persistencia de stock
+   * @param {InventoryTransferService} inventoryTransferService Servicio de persistencia de transferencia de inventario
+   * @param {ProductExistService} productExistService Servicio de validación de existencia de producto
+   * @param {RegisteredNewLocationPublisher} registeredNewLocationPublisher Publicador de registro de nueva ubicación
+   * @param {UpdatedLocationInfoPublisher} updatedLocationInfoPublisher Publicador de actualización de información de ubicación
+   * @param {RegisteredInventoryTransferPublisher} registeredInventoryTransferPublisher Publicador de registro de transferencia de inventario
+   * @memberof StorageController
+   */
   constructor(
     private readonly locationService: LocationService,
     private readonly stockService: StockService,
@@ -50,6 +68,13 @@ export class StorageController {
     private readonly registeredInventoryTransferPublisher: RegisteredInventoryTransferPublisher,
   ) {}
 
+  /**
+   * Registra una nueva ubicación
+   *
+   * @param {NewLocationDto} newLocationDto Datos de la nueva ubicación
+   * @return {Observable<LocationDomainModel>} Observable con la ubicación
+   * @memberof StorageController
+   */
   @UseGuards(JwtGuard)
   @Post('location/create')
   registerNewLocation(
@@ -62,6 +87,13 @@ export class StorageController {
     return registerNewLocationUseCase.execute(newLocationDto);
   }
 
+  /**
+   * Obtiene la información de una ubicación
+   *
+   * @param {string} locationId Identificador de la ubicación
+   * @return {Observable<LocationDomainModel>} Observable con la ubicación
+   * @memberof StorageController
+   */
   @UseGuards(JwtGuard)
   @Get('location/info/:_id')
   getLocationInfo(
@@ -73,6 +105,14 @@ export class StorageController {
     return getLocationInfoUseCase.execute(locationId);
   }
 
+  /**
+   * Actualiza la información de una ubicación
+   *
+   * @param {UpdateLocationDto} updateLocationDto Datos de actualización de la ubicación
+   * @param {string} locationId Identificador de la ubicación
+   * @return {Observable<LocationDomainModel>} Observable con la ubicación
+   * @memberof StorageController
+   */
   @UseGuards(JwtGuard)
   @Put('location/update/:_id')
   updateLocation(
@@ -86,6 +126,14 @@ export class StorageController {
     return updateLocationInfoUseCase.execute(locationId, updateLocationDto);
   }
 
+  /**
+   * Registra una transferencia de inventario
+   *
+   * @param {string} authHeader Cabecera de autorización
+   * @param {InventoryTransferDto} inventoryTransferDto Datos de la transferencia de inventario
+   * @return {Observable<InventoryTransferDomainModel>} Observable con la transferencia de inventario
+   * @memberof StorageController
+   */
   @UseGuards(JwtGuard)
   @Post('inventory-transfer/register')
   registerInventoryTransfer(

@@ -6,15 +6,37 @@ import { Observable, tap } from 'rxjs';
 import { StockDomainModel } from '../../domain/models';
 import { IRegisteredInventoryMovementMap } from '../utils/interfaces';
 
+/**
+ * Controlador de eventos de almacenamiento
+ *
+ * @export
+ * @class StorageEventController
+ */
 @Controller()
 export class StorageEventController {
+  /**
+   * Crea una instancia de StorageEventController
+   *
+   * @param {StockService} stock$ Servicio de persistencia de stock
+   * @param {LocationService} location$ Servicio de persistencia de ubicación
+   * @memberof StorageEventController
+   */
   constructor(
     private readonly stock$: StockService,
     private readonly location$: LocationService,
   ) {}
 
+  /**
+   * Maneja el evento de registro de movimiento de inventario
+   *
+   * @param {string} data Datos del evento
+   * @return {Observable<StockDomainModel>} Observable con el stock
+   * @memberof StorageEventController
+   */
   @MessagePattern('registered-inventory-movement')
-  inscriptionCommitted(@Payload() data: string): Observable<StockDomainModel> {
+  registeredInventoryMovement(
+    @Payload() data: string,
+  ): Observable<StockDomainModel> {
     const toManage: IRegisteredInventoryMovementMap = JSON.parse(data);
     const stockInventoryEventManagerUseCase =
       new StockInventoryEventManagerUseCase(this.stock$, this.location$);

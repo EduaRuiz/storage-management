@@ -5,14 +5,34 @@ import {
   ILocationDomainService,
   IStockDomainService,
 } from '../../domain/services';
-import { catchError, iif, map, mergeMap, of, switchMap } from 'rxjs';
+import { catchError, iif, mergeMap, of, switchMap } from 'rxjs';
 
+/**
+ * Caso de uso de administrar eventos de inventario
+ *
+ * @export
+ * @class StockInventoryEventManagerUseCase
+ */
 export class StockInventoryEventManagerUseCase {
+  /**
+   * Crea una instancia de StockInventoryEventManagerUseCase
+   *
+   * @param {IStockDomainService} stock$ Servicio de dominio de stock
+   * @param {ILocationDomainService} location$ Servicio de dominio de ubicación
+   * @memberof StockInventoryEventManagerUseCase
+   */
   constructor(
     private readonly stock$: IStockDomainService,
     private readonly location$: ILocationDomainService,
   ) {}
 
+  /**
+   * Ejecutar caso de uso
+   *
+   * @param {IStockEventFromInventoryDomain} stockOut Stock de inventario a administrar
+   * @return {Observable<StockDomainModel>} Observable de stock
+   * @memberof StockInventoryEventManagerUseCase
+   */
   execute(
     stockOut: IStockEventFromInventoryDomain,
   ): Observable<StockDomainModel> {
@@ -53,6 +73,15 @@ export class StockInventoryEventManagerUseCase {
     );
   }
 
+  /**
+   * Validar si el stock existe
+   *
+   * @private
+   * @param {string} locationId Id de ubicación
+   * @param {string} productId Id de producto
+   * @return {Observable<boolean>} Observable de booleano
+   * @memberof StockInventoryEventManagerUseCase
+   */
   private validateIfStockExists(
     locationId: string,
     productId: string,
@@ -69,6 +98,16 @@ export class StockInventoryEventManagerUseCase {
       );
   }
 
+  /**
+   * Crear stock
+   *
+   * @private
+   * @param {string} locationId Id de ubicación
+   * @param {string} productId Id de producto
+   * @param {number} quantity Cantidad
+   * @return {Observable<StockDomainModel>} Observable de stock
+   * @memberof StockInventoryEventManagerUseCase
+   */
   private createStock(
     locationId: string,
     productId: string,
@@ -87,17 +126,5 @@ export class StockInventoryEventManagerUseCase {
         });
       }),
     );
-  }
-
-  private validateIfStockIsUpToDate(
-    stock: IStockEventFromInventoryDomain,
-  ): Observable<boolean> {
-    return this.stock$
-      .findOneByLocationIdAndProductId(stock.locationId, stock.product._id)
-      .pipe(
-        map((updatedStock: StockDomainModel) => {
-          return updatedStock.quantity === stock.quantity;
-        }),
-      );
   }
 }

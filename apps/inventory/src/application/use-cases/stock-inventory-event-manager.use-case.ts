@@ -7,12 +7,32 @@ import {
 } from '../../domain/services';
 import { catchError, iif, mergeMap, of, switchMap } from 'rxjs';
 
+/**
+ * Maneja los eventos de stock
+ *
+ * @export
+ * @class StockStorageEventManagerUseCase
+ */
 export class StockStorageEventManagerUseCase {
+  /**
+   * Crea una instancia de StockStorageEventManagerUseCase
+   *
+   * @param {IStockDomainService} stock$ Servicio de dominio de stocks
+   * @param {IProductDomainService} product$ Servicio de dominio de productos
+   * @memberof StockStorageEventManagerUseCase
+   */
   constructor(
     private readonly stock$: IStockDomainService,
     private readonly product$: IProductDomainService,
   ) {}
 
+  /**
+   * Ejecuta el caso de uso
+   *
+   * @param {IStockEventFromStorageDomain} stockUpdated Evento de stock actualizado
+   * @return  {Observable<StockDomainModel>} Observable con la información del stock
+   * @memberof StockStorageEventManagerUseCase
+   */
   execute(
     stockUpdated: IStockEventFromStorageDomain,
   ): Observable<StockDomainModel> {
@@ -53,6 +73,15 @@ export class StockStorageEventManagerUseCase {
     );
   }
 
+  /**
+   * Valida si el stock existe
+   *
+   * @private
+   * @param {string} locationId Identificador de la ubicación
+   * @param {string} productId Identificador del producto
+   * @return   {Observable<boolean>} Observable con el resultado de la validación
+   * @memberof StockStorageEventManagerUseCase
+   */
   private validateIfStockExists(
     locationId: string,
     productId: string,
@@ -67,6 +96,16 @@ export class StockStorageEventManagerUseCase {
     );
   }
 
+  /**
+   * Crea un stock
+   *
+   * @private
+   * @param {string} productId Identificador del producto
+   * @param {string} locationId Identificador de la ubicación
+   * @param {number} quantity Cantidad
+   * @return  {Observable<StockDomainModel>} Observable con la información del stock
+   * @memberof StockStorageEventManagerUseCase
+   */
   private createStock(
     productId: string,
     locationId: string,

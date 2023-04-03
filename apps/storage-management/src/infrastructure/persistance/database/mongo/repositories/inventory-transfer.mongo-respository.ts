@@ -18,14 +18,34 @@ import { InventoryTransferMongoModel } from '../models';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+/**
+ * Repositorio de transferencia de inventario en MongoDB
+ *
+ * @export
+ * @class InventoryTransferMongoRepository
+ * @implements {IRepositoryBase<InventoryTransferMongoModel>}
+ */
 export class InventoryTransferMongoRepository
   implements IRepositoryBase<InventoryTransferMongoModel>
 {
+  /**
+   * Crea una instancia de InventoryTransferMongoRepository
+   *
+   * @param {Model<InventoryTransferMongoModel>} inventoryTransferMongoEntity Modelo de transferencia de inventario en MongoDB
+   * @memberof InventoryTransferMongoRepository
+   */
   constructor(
     @InjectModel(InventoryTransferMongoModel.name)
     private inventoryTransferMongoEntity: Model<InventoryTransferMongoModel>,
   ) {}
 
+  /**
+   * Crea una transferencia de inventario
+   *
+   * @param {InventoryTransferMongoModel} entity Transferencia de inventario
+   * @return {Observable<InventoryTransferMongoModel>} Observable de transferencia de inventario
+   * @memberof InventoryTransferMongoRepository
+   */
   create(
     entity: InventoryTransferMongoModel,
   ): Observable<InventoryTransferMongoModel> {
@@ -39,6 +59,14 @@ export class InventoryTransferMongoRepository
     );
   }
 
+  /**
+   * Actualiza una transferencia de inventario
+   *
+   * @param {string} entityId Identificador de la transferencia de inventario
+   * @param {InventoryTransferMongoModel} entity Transferencia de inventario
+   * @return {Observable<InventoryTransferMongoModel>} Observable de transferencia de inventario
+   * @memberof InventoryTransferMongoRepository
+   */
   update(
     entityId: string,
     entity: InventoryTransferMongoModel,
@@ -63,6 +91,13 @@ export class InventoryTransferMongoRepository
     );
   }
 
+  /**
+   * Elimina una transferencia de inventario
+   *
+   * @param {string} entityId Identificador de la transferencia de inventario
+   * @return {Observable<InventoryTransferMongoModel>} Observable de transferencia de inventario
+   * @memberof InventoryTransferMongoRepository
+   */
   delete(entityId: string): Observable<InventoryTransferMongoModel> {
     return this.findOneById(entityId).pipe(
       switchMap(() => {
@@ -74,6 +109,12 @@ export class InventoryTransferMongoRepository
     );
   }
 
+  /**
+   * Obtiene todas las transferencias de inventario
+   *
+   * @return {Observable<InventoryTransferMongoModel[]>} Observable de transferencias de inventario
+   * @memberof InventoryTransferMongoRepository
+   */
   findAll(): Observable<InventoryTransferMongoModel[]> {
     return from(this.inventoryTransferMongoEntity.find().exec()).pipe(
       map((entities: InventoryTransferMongoModel[]) => {
@@ -82,6 +123,13 @@ export class InventoryTransferMongoRepository
     );
   }
 
+  /**
+   * Obtiene una transferencia de inventario por su identificador
+   *
+   * @param {string} entityId Identificador de la transferencia de inventario
+   * @return {Observable<InventoryTransferMongoModel>} Observable de transferencia de inventario
+   * @memberof InventoryTransferMongoRepository
+   */
   findOneById(entityId: string): Observable<InventoryTransferMongoModel> {
     return from(
       this.inventoryTransferMongoEntity.findById(

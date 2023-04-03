@@ -12,7 +12,24 @@ import { Observable, switchMap, iif, throwError, catchError, tap } from 'rxjs';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { RegisteredInventoryMovementDomainEvent } from '../../domain/events/publishers';
 
+/**
+ * Registra un movimiento de inventario
+ *
+ * @export
+ * @class RegisterInventoryMovementUseCase
+ */
 export class RegisterInventoryMovementUseCase {
+  /**
+   *
+   * Crea un stock
+   *
+   * @param {IInventoryMovementDomainService} inventoryMovement$ Servicio de dominio de movimientos de inventario
+   * @param {IStockDomainService} stock$ Servicio de dominio de stocks
+   * @param {IProductDomainService} product$ Servicio de dominio de productos
+   * @param {ILocationExistDomainService} locationExist$ Servicio de dominio de existencia de ubicaciones
+   * @param {RegisteredInventoryMovementDomainEvent} registeredInventoryMovementDomainEvent Evento de dominio de registro de movimiento de inventario
+   * @memberof RegisterInventoryMovementUseCase
+   */
   constructor(
     private readonly inventoryMovement$: IInventoryMovementDomainService,
     private readonly stock$: IStockDomainService,
@@ -21,6 +38,14 @@ export class RegisterInventoryMovementUseCase {
     private readonly registeredInventoryMovementDomainEvent: RegisteredInventoryMovementDomainEvent,
   ) {}
 
+  /**
+   * Ejecuta el caso de uso
+   *
+   * @param {IInventoryMovementDomainDto} inventoryMovementDto Datos del movimiento de inventario
+   * @param {string} token Token de autenticación
+   * @return {Observable<InventoryMovementDomainModel>} Observable con el movimiento de inventario
+   * @memberof RegisterInventoryMovementUseCase
+   */
   execute(
     inventoryMovementDto: IInventoryMovementDomainDto,
     token: string,
@@ -75,6 +100,14 @@ export class RegisterInventoryMovementUseCase {
     );
   }
 
+  /**
+   * Crea un stock
+   *
+   * @private
+   * @param {IInventoryMovementDomainDto} inventoryMovementDto Datos del movimiento de inventario
+   * @return  {Observable<StockDomainModel>} Observable con el stock
+   * @memberof RegisterInventoryMovementUseCase
+   */
   private createStock(
     inventoryMovementDto: IInventoryMovementDomainDto,
   ): Observable<StockDomainModel> {
