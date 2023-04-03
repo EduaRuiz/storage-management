@@ -1,5 +1,11 @@
 import { Module } from '@nestjs/common';
 
+/**
+ * Módulo de Postgres
+ *
+ * @export
+ * @class PostgresModule
+ */
 @Module({
   imports: [],
   controllers: [],

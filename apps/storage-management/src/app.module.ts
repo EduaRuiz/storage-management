@@ -11,6 +11,12 @@ import { ProductExistService } from './infrastructure/utils/services';
 import { HttpModule } from '@nestjs/axios';
 import { MongoServerErrorExceptionFilter } from './infrastructure/utils/exception-filters';
 
+/**
+ * Módulo de aplicación
+ *
+ * @export
+ * @class AppModule
+ */
 @Module({
   imports: [
     ConfigModule.forRoot({

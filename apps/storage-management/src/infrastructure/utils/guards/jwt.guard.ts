@@ -7,10 +7,22 @@ import {
 import { Observable, map, of, switchMap, catchError } from 'rxjs';
 import * as jwt from 'jsonwebtoken';
 
+/**
+ * Guard de JWT para autenticación de usuarios
+ *
+ * @export
+ * @class JwtGuard
+ * @implements {CanActivate}
+ */
 @Injectable()
 export class JwtGuard implements CanActivate {
-  // constructor(private readonly jwtService: JwtService) {}
-
+  /**
+   * Verifica si el usuario está autenticado
+   *
+   * @param {ExecutionContext} context Contexto de ejecución
+   * @return {Observable<boolean>} Observable de booleano
+   * @memberof JwtGuard
+   */
   canActivate(context: ExecutionContext): Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.headers.authorization?.replace('Bearer ', '');

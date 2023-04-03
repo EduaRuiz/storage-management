@@ -7,14 +7,36 @@ import { InventoryTransferMongoModel } from '../models';
 import { Injectable } from '@nestjs/common';
 import { IInventoryTransferDomainService } from 'apps/storage-management/src/domain/services';
 
+/**
+ * Servicio de transferencia de inventario en MongoDB
+ *
+ * @export
+ * @class InventoryTransferMongoService
+ * @implements {IInventoryTransferDomainService<InventoryTransferMongoModel>}
+ */
 @Injectable()
 export class InventoryTransferMongoService
   implements IInventoryTransferDomainService<InventoryTransferMongoModel>
 {
+  /**
+   * Crea una instancia de InventoryTransferMongoService
+   *
+   * @param {InventoryTransferMongoRepository} inventoryTransferMongoRepository Repositorio de transferencia de inventario en MongoDB
+   * @param {StockMongoRepository} stockMongoRepository Repositorio de stock en MongoDB
+   * @memberof InventoryTransferMongoService
+   */
   constructor(
     private readonly inventoryTransferMongoRepository: InventoryTransferMongoRepository,
     private readonly stockMongoRepository: StockMongoRepository,
   ) {}
+
+  /**
+   * Genera una transferencia de inventario
+   *
+   * @param {InventoryTransferMongoModel} entity Transferencia de inventario
+   * @return {Observable<InventoryTransferMongoModel>} Observable de transferencia de inventario
+   * @memberof InventoryTransferMongoService
+   */
   generateTransfer(
     entity: InventoryTransferMongoModel,
   ): Observable<InventoryTransferMongoModel> {
@@ -37,6 +59,13 @@ export class InventoryTransferMongoService
     );
   }
 
+  /**
+   * Obtiene transferencias de inventario por id de producto
+   *
+   * @param {string} productId Id de producto
+   * @return {Observable<InventoryTransferMongoModel[]>} Observable de las transferencias de inventario
+   * @memberof InventoryTransferMongoService
+   */
   getTransfersByProductId(
     productId: string,
   ): Observable<InventoryTransferMongoModel[]> {
@@ -50,6 +79,13 @@ export class InventoryTransferMongoService
     );
   }
 
+  /**
+   * Obtiene transferencias de inventario por id de ubicación
+   *
+   * @param {string} locationId Id de ubicación
+   * @return {Observable<InventoryTransferMongoModel[]>} Observable de las transferencias de inventario
+   * @memberof InventoryTransferMongoService
+   */
   getTransfersByLocationId(
     locationId: string,
   ): Observable<InventoryTransferMongoModel[]> {

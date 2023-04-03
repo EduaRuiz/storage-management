@@ -6,7 +6,7 @@ describe('StockService', () => {
 
   describe('when instantiated', () => {
     it('should extend StockMongoService class', () => {
-      stockService = new StockService({} as any, {} as any);
+      stockService = new StockService({} as any);
       expect(stockService).toBeInstanceOf(StockMongoService);
     });
   });

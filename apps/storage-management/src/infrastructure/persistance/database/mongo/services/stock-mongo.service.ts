@@ -1,16 +1,34 @@
 import { Observable, mergeMap, of, switchMap, throwError } from 'rxjs';
-import { LocationMongoRepository, StockMongoRepository } from '../repositories';
+import { StockMongoRepository } from '../repositories';
 import { StockMongoModel } from '../models';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { IStockDomainService } from 'apps/storage-management/src/domain/services';
 
+/**
+ * Servicio de stock en MongoDB
+ *
+ * @export
+ * @class StockMongoService
+ * @implements {IStockDomainService<StockMongoModel>}
+ */
 @Injectable()
 export class StockMongoService implements IStockDomainService<StockMongoModel> {
-  constructor(
-    private readonly stockMongoRepository: StockMongoRepository,
-    private readonly locationMongoRepository: LocationMongoRepository,
-  ) {}
+  /**
+   * Crea una instancia de StockMongoService
+   *
+   * @param {StockMongoRepository} stockMongoRepository Repositorio de stock en MongoDB
+   * @memberof StockMongoService
+   */
+  constructor(private readonly stockMongoRepository: StockMongoRepository) {}
 
+  /**
+   * Busca un stock por id de ubicación y id de producto
+   *
+   * @param {string} locationId Id de la ubicación
+   * @param {string} productId Id del producto
+   * @return {Observable<StockMongoModel>} Observable de stock
+   * @memberof StockMongoService
+   */
   findOneByLocationIdAndProductId(
     locationId: string,
     productId: string,
@@ -30,10 +48,25 @@ export class StockMongoService implements IStockDomainService<StockMongoModel> {
     );
   }
 
+  /**
+   * Crea un stock
+   *
+   * @param {StockMongoModel} entity Stock
+   * @return {Observable<StockMongoModel>} Observable de stock
+   * @memberof StockMongoService
+   */
   createStock(entity: StockMongoModel): Observable<StockMongoModel> {
     return this.stockMongoRepository.create(entity);
   }
 
+  /**
+   * Actualiza la cantidad producto en un stock
+   *
+   * @param {string} entityId Id del stock
+   * @param {StockMongoModel} entity Stock
+   * @return  {Observable<StockMongoModel>} Observable de stock
+   * @memberof StockMongoService
+   */
   updateQuantity(
     entityId: string,
     entity: StockMongoModel,
@@ -46,6 +79,13 @@ export class StockMongoService implements IStockDomainService<StockMongoModel> {
     );
   }
 
+  /**
+   * Obtiene un stock por su id
+   *
+   * @param {string} entityId Id del stock
+   * @return {Observable<StockMongoModel>} Observable de stock
+   * @memberof StockMongoService
+   */
   findOneById(entityId: string): Observable<StockMongoModel> {
     return this.stockMongoRepository.findOneById(entityId);
   }

@@ -16,8 +16,6 @@ import * as jwt from 'jsonwebtoken';
  */
 @Injectable()
 export class JwtGuard implements CanActivate {
-  // constructor(private readonly jwtService: JwtService) {}
-
   /**
    * Verificar si el usuario tiene permiso para acceder a la ruta
    *

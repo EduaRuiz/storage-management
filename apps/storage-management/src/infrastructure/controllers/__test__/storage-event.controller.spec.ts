@@ -29,7 +29,7 @@ describe('StorageEventController', () => {
     controller = module.get<StorageEventController>(StorageEventController);
   });
 
-  describe('inscriptionCommitted', () => {
+  describe('registeredInventoryMovement', () => {
     it('should call StockInventoryEventManagerUseCase.execute and return an Observable with a StockDomainModel', () => {
       // Arrange
       const toManage = {
@@ -47,7 +47,7 @@ describe('StorageEventController', () => {
 
       // Act
       const result: Observable<StockDomainModel> =
-        controller.inscriptionCommitted(JSON.stringify(toManage));
+        controller.registeredInventoryMovement(JSON.stringify(toManage));
       // Assert
       expect(result).toBeInstanceOf(Observable);
       result.subscribe((stockDomainModel) => {
