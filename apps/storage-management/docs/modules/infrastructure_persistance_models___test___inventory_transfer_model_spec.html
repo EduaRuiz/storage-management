@@ -1,0 +1,171 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>infrastructure/persistance/models/__test__/inventory-transfer.model.spec | storage-management</title><meta name="description" content="Documentation for storage-management"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base="..">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">storage-management</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb">
+<li><a href="../modules.html">storage-management</a></li>
+<li><a href="infrastructure_persistance_models___test___inventory_transfer_model_spec.html">infrastructure/persistance/models/__test__/inventory-transfer.model.spec</a></li></ul>
+<h1>Module infrastructure/persistance/models/__test__/inventory-transfer.model.spec</h1></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/EduaRuiz/storage-management/blob/9609330/apps/storage-management/src/infrastructure/persistance/models/__test__/inventory-transfer.model.spec.ts#L1">apps/storage-management/src/infrastructure/persistance/models/__test__/inventory-transfer.model.spec.ts:1</a></li></ul></aside></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li class="current"><a href="../modules.html">storage-<wbr/>management</a>
+<ul>
+<li class="tsd-kind-module"><a href="app_module.html">app.module</a></li>
+<li class="tsd-kind-module"><a href="application.html">application</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases.html">application/use-<wbr/>cases</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases___test___get_location_info_use_case_spec.html">application/use-<wbr/>cases/__test__/get-<wbr/>location-<wbr/>info.use-<wbr/>case.spec</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases___test___register_inventory_transfer_use_case_spec.html">application/use-<wbr/>cases/__test__/register-<wbr/>inventory-<wbr/>transfer.use-<wbr/>case.spec</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases___test___register_new_location_use_case_spec.html">application/use-<wbr/>cases/__test__/register-<wbr/>new-<wbr/>location.use-<wbr/>case.spec</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases___test___stock_inventory_event_manager_use_case_spec.html">application/use-<wbr/>cases/__test__/stock-<wbr/>inventory-<wbr/>event-<wbr/>manager.use-<wbr/>case.spec</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases___test___update_location_info_use_case_spec.html">application/use-<wbr/>cases/__test__/update-<wbr/>location-<wbr/>info.use-<wbr/>case.spec</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases_get_location_info_use_case.html">application/use-<wbr/>cases/get-<wbr/>location-<wbr/>info.use-<wbr/>case</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases_register_inventory_transfer_use_case.html">application/use-<wbr/>cases/register-<wbr/>inventory-<wbr/>transfer.use-<wbr/>case</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases_register_new_location_use_case.html">application/use-<wbr/>cases/register-<wbr/>new-<wbr/>location.use-<wbr/>case</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases_stock_inventory_event_manager_use_case.html">application/use-<wbr/>cases/stock-<wbr/>inventory-<wbr/>event-<wbr/>manager.use-<wbr/>case</a></li>
+<li class="tsd-kind-module"><a href="application_use_cases_update_location_info_use_case.html">application/use-<wbr/>cases/update-<wbr/>location-<wbr/>info.use-<wbr/>case</a></li>
+<li class="tsd-kind-module"><a href="domain.html">domain</a></li>
+<li class="tsd-kind-module"><a href="domain_dtos.html">domain/dtos</a></li>
+<li class="tsd-kind-module"><a href="domain_dtos_inventory_transfer_domain_dto.html">domain/dtos/inventory-<wbr/>transfer.domain-<wbr/>dto</a></li>
+<li class="tsd-kind-module"><a href="domain_dtos_new_location_domain_dto.html">domain/dtos/new-<wbr/>location.domain-<wbr/>dto</a></li>
+<li class="tsd-kind-module"><a href="domain_dtos_update_location_domain_dto.html">domain/dtos/update-<wbr/>location.domain-<wbr/>dto</a></li>
+<li class="tsd-kind-module"><a href="domain_events.html">domain/events</a></li>
+<li class="tsd-kind-module"><a href="domain_events_publishers.html">domain/events/publishers</a></li>
+<li class="tsd-kind-module"><a href="domain_events_publishers___test___registered_inventory_transfer_domain_event_spec.html">domain/events/publishers/__test__/registered-<wbr/>inventory-<wbr/>transfer.domain-<wbr/>event.spec</a></li>
+<li class="tsd-kind-module"><a href="domain_events_publishers___test___registered_new_location_domain_event_spec.html">domain/events/publishers/__test__/registered-<wbr/>new-<wbr/>location.domain-<wbr/>event.spec</a></li>
+<li class="tsd-kind-module"><a href="domain_events_publishers___test___updated_location_info_domain_event_spec.html">domain/events/publishers/__test__/updated-<wbr/>location-<wbr/>info.domain-<wbr/>event.spec</a></li>
+<li class="tsd-kind-module"><a href="domain_events_publishers_registered_inventory_transfer_domain_event.html">domain/events/publishers/registered-<wbr/>inventory-<wbr/>transfer.domain-<wbr/>event</a></li>
+<li class="tsd-kind-module"><a href="domain_events_publishers_registered_new_location_domain_event.html">domain/events/publishers/registered-<wbr/>new-<wbr/>location.domain-<wbr/>event</a></li>
+<li class="tsd-kind-module"><a href="domain_events_publishers_updated_location_info_domain_event.html">domain/events/publishers/updated-<wbr/>location-<wbr/>info.domain-<wbr/>event</a></li>
+<li class="tsd-kind-module"><a href="domain_interfaces.html">domain/interfaces</a></li>
+<li class="tsd-kind-module"><a href="domain_interfaces_data_out_context.html">domain/interfaces/data-<wbr/>out-<wbr/>context</a></li>
+<li class="tsd-kind-module"><a href="domain_interfaces_data_out_context_product_exist_interface.html">domain/interfaces/data-<wbr/>out-<wbr/>context/product-<wbr/>exist.interface</a></li>
+<li class="tsd-kind-module"><a href="domain_interfaces_product_from_inventory_domain.html">domain/interfaces/product-<wbr/>from-<wbr/>inventory.domain</a></li>
+<li class="tsd-kind-module"><a href="domain_interfaces_stock_event_from_inventory_domain.html">domain/interfaces/stock-<wbr/>event-<wbr/>from-<wbr/>inventory.domain</a></li>
+<li class="tsd-kind-module"><a href="domain_models.html">domain/models</a></li>
+<li class="tsd-kind-module"><a href="domain_models___test___inventory_transfer_domain_model_spec.html">domain/models/__test__/inventory-<wbr/>transfer.domain-<wbr/>model.spec</a></li>
+<li class="tsd-kind-module"><a href="domain_models___test___location_domain_model_spec.html">domain/models/__test__/location.domain-<wbr/>model.spec</a></li>
+<li class="tsd-kind-module"><a href="domain_models___test___stock_domain_model_spec.html">domain/models/__test__/stock.domain-<wbr/>model.spec</a></li>
+<li class="tsd-kind-module"><a href="domain_models_inventory_transfer_domain_model.html">domain/models/inventory-<wbr/>transfer.domain-<wbr/>model</a></li>
+<li class="tsd-kind-module"><a href="domain_models_location_domain_model.html">domain/models/location.domain-<wbr/>model</a></li>
+<li class="tsd-kind-module"><a href="domain_models_stock_domain_model.html">domain/models/stock.domain-<wbr/>model</a></li>
+<li class="tsd-kind-module"><a href="domain_services.html">domain/services</a></li>
+<li class="tsd-kind-module"><a href="domain_services_inventory_transfer_domain_service.html">domain/services/inventory-<wbr/>transfer.domain-<wbr/>service</a></li>
+<li class="tsd-kind-module"><a href="domain_services_location_domain_service.html">domain/services/location.domain-<wbr/>service</a></li>
+<li class="tsd-kind-module"><a href="domain_services_product_exist_domain_service.html">domain/services/product-<wbr/>exist.domain-<wbr/>service</a></li>
+<li class="tsd-kind-module"><a href="domain_services_stock_domain_service.html">domain/services/stock.domain-<wbr/>service</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_controllers.html">infrastructure/controllers</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_controllers___test___storage_event_controller_spec.html">infrastructure/controllers/__test__/storage-<wbr/>event.controller.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_controllers___test___storage_controller_spec.html">infrastructure/controllers/__test__/storage.controller.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_controllers_storage_event_controller.html">infrastructure/controllers/storage-<wbr/>event.controller</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_controllers_storage_controller.html">infrastructure/controllers/storage.controller</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_messaging.html">infrastructure/messaging</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_messaging_messaging_module.html">infrastructure/messaging/messaging.module</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_messaging_publishers.html">infrastructure/messaging/publishers</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_messaging_publishers___test___registered_inventory_transfer_publisher_spec.html">infrastructure/messaging/publishers/__test__/registered-<wbr/>inventory-<wbr/>transfer.publisher.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_messaging_publishers___test___registered_new_location_publisher_spec.html">infrastructure/messaging/publishers/__test__/registered-<wbr/>new-<wbr/>location.publisher.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_messaging_publishers___test___updated_location_info_publisher_spec.html">infrastructure/messaging/publishers/__test__/updated-<wbr/>location-<wbr/>info.publisher.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_messaging_publishers_registered_inventory_transfer_publisher.html">infrastructure/messaging/publishers/registered-<wbr/>inventory-<wbr/>transfer.publisher</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_messaging_publishers_registered_new_location_publisher.html">infrastructure/messaging/publishers/registered-<wbr/>new-<wbr/>location.publisher</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_messaging_publishers_updated_location_info_publisher.html">infrastructure/messaging/publishers/updated-<wbr/>location-<wbr/>info.publisher</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance.html">infrastructure/persistance</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database.html">infrastructure/persistance/database</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo.html">infrastructure/persistance/database/mongo</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_configs.html">infrastructure/persistance/database/mongo/configs</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_configs_mongoose_config_service.html">infrastructure/persistance/database/mongo/configs/mongoose-<wbr/>config.service</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_configs_mongoose_config_service_spec.html">infrastructure/persistance/database/mongo/configs/mongoose-<wbr/>config.service.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_models.html">infrastructure/persistance/database/mongo/models</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_models___test___inventory_transfer_mongo_model_spec.html">infrastructure/persistance/database/mongo/models/__test__/inventory-<wbr/>transfer.mongo-<wbr/>model.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_models___test___location_mongo_model_spec.html">infrastructure/persistance/database/mongo/models/__test__/location.mongo-<wbr/>model.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_models___test___stock_mongo_model_spec.html">infrastructure/persistance/database/mongo/models/__test__/stock.mongo-<wbr/>model.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_models_inventory_transfer_mongo_model.html">infrastructure/persistance/database/mongo/models/inventory-<wbr/>transfer.mongo-<wbr/>model</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_models_location_mongo_model.html">infrastructure/persistance/database/mongo/models/location.mongo-<wbr/>model</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_models_stock_mongo_model.html">infrastructure/persistance/database/mongo/models/stock.mongo-<wbr/>model</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_mongo_module.html">infrastructure/persistance/database/mongo/mongo.module</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_repositories.html">infrastructure/persistance/database/mongo/repositories</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_repositories___test___inventory_transfer_mongo_respository_spec.html">infrastructure/persistance/database/mongo/repositories/__test__/inventory-<wbr/>transfer.mongo-<wbr/>respository.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_repositories___test___location_mongo_repository_spec.html">infrastructure/persistance/database/mongo/repositories/__test__/location-<wbr/>mongo.repository.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_repositories___test___stock_mongo_respository_spec.html">infrastructure/persistance/database/mongo/repositories/__test__/stock-<wbr/>mongo.respository.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_repositories_interfaces.html">infrastructure/persistance/database/mongo/repositories/interfaces</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_repositories_interfaces_repository_base_interface.html">infrastructure/persistance/database/mongo/repositories/interfaces/repository-<wbr/>base.interface</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_repositories_inventory_transfer_mongo_respository.html">infrastructure/persistance/database/mongo/repositories/inventory-<wbr/>transfer.mongo-<wbr/>respository</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_repositories_location_mongo_repository.html">infrastructure/persistance/database/mongo/repositories/location-<wbr/>mongo.repository</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_repositories_stock_mongo_respository.html">infrastructure/persistance/database/mongo/repositories/stock-<wbr/>mongo.respository</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_services.html">infrastructure/persistance/database/mongo/services</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_services___test___inventory_transfer_mongo_service_spec.html">infrastructure/persistance/database/mongo/services/__test__/inventory-<wbr/>transfer-<wbr/>mongo.service.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_services___test___location_mongo_service_spec.html">infrastructure/persistance/database/mongo/services/__test__/location-<wbr/>mongo.service.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_services___test___stock_mongo_service_spec.html">infrastructure/persistance/database/mongo/services/__test__/stock-<wbr/>mongo.service.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_services_inventory_transfer_mongo_service.html">infrastructure/persistance/database/mongo/services/inventory-<wbr/>transfer-<wbr/>mongo.service</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_services_location_mongo_service.html">infrastructure/persistance/database/mongo/services/location-<wbr/>mongo.service</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_mongo_services_stock_mongo_service.html">infrastructure/persistance/database/mongo/services/stock-<wbr/>mongo.service</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_postgres.html">infrastructure/persistance/database/postgres</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_postgres_postgres_module.html">infrastructure/persistance/database/postgres/postgres.module</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_postgres_repositories.html">infrastructure/persistance/database/postgres/repositories</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_postgres_repositories_interfaces.html">infrastructure/persistance/database/postgres/repositories/interfaces</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_database_postgres_repositories_interfaces_repository_base_interface.html">infrastructure/persistance/database/postgres/repositories/interfaces/repository-<wbr/>base.interface</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_models.html">infrastructure/persistance/models</a></li>
+<li class="current selected tsd-kind-module"><a href="infrastructure_persistance_models___test___inventory_transfer_model_spec.html">infrastructure/persistance/models/__test__/inventory-<wbr/>transfer.model.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_models___test___location_model_spec.html">infrastructure/persistance/models/__test__/location.model.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_models___test___stock_model_spec.html">infrastructure/persistance/models/__test__/stock.model.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_models_inventory_transfer_model.html">infrastructure/persistance/models/inventory-<wbr/>transfer.model</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_models_location_model.html">infrastructure/persistance/models/location.model</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_models_stock_model.html">infrastructure/persistance/models/stock.model</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_persistence_module.html">infrastructure/persistance/persistence.module</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_services.html">infrastructure/persistance/services</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_services___test___inventory_transfer_service_spec.html">infrastructure/persistance/services/__test__/inventory-<wbr/>transfer.service.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_services___test___location_service_spec.html">infrastructure/persistance/services/__test__/location.service.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_services___test___stock_service_spec.html">infrastructure/persistance/services/__test__/stock.service.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_services_inventory_transfer_service.html">infrastructure/persistance/services/inventory-<wbr/>transfer.service</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_services_location_service.html">infrastructure/persistance/services/location.service</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_persistance_services_stock_service.html">infrastructure/persistance/services/stock.service</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils.html">infrastructure/utils</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_dtos.html">infrastructure/utils/dtos</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_dtos___test___inventory_transfer_dto_spec.html">infrastructure/utils/dtos/__test__/inventory-<wbr/>transfer.dto.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_dtos___test___new_location_dto_spec.html">infrastructure/utils/dtos/__test__/new-<wbr/>location.dto.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_dtos___test___update_location_dto_spec.html">infrastructure/utils/dtos/__test__/update-<wbr/>location.dto.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_dtos_inventory_transfer_dto.html">infrastructure/utils/dtos/inventory-<wbr/>transfer.dto</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_dtos_new_location_dto.html">infrastructure/utils/dtos/new-<wbr/>location.dto</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_dtos_update_location_dto.html">infrastructure/utils/dtos/update-<wbr/>location.dto</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_exception_filters.html">infrastructure/utils/exception-<wbr/>filters</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_exception_filters___test___mongo_server_error_exception_filter_spec.html">infrastructure/utils/exception-<wbr/>filters/__test__/mongo-<wbr/>server-<wbr/>error.exception-<wbr/>filter.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_exception_filters_mongo_server_error_exception_filter.html">infrastructure/utils/exception-<wbr/>filters/mongo-<wbr/>server-<wbr/>error.exception-<wbr/>filter</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_guards.html">infrastructure/utils/guards</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_guards___test___jwt_guard_spec.html">infrastructure/utils/guards/__test__/jwt.guard.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_guards_jwt_guard.html">infrastructure/utils/guards/jwt.guard</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_interfaces.html">infrastructure/utils/interfaces</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_interfaces_registered_inventory_movement_map.html">infrastructure/utils/interfaces/registered-<wbr/>inventory-<wbr/>movement.map</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_services.html">infrastructure/utils/services</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_services___test___product_exist_service_spec.html">infrastructure/utils/services/__test__/product-<wbr/>exist.service.spec</a></li>
+<li class="tsd-kind-module"><a href="infrastructure_utils_services_product_exist_service.html">infrastructure/utils/services/product-<wbr/>exist.service</a></li>
+<li class="tsd-kind-module"><a href="main.html">main</a></li></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky"></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="../assets/main.js"></script></body></html>
