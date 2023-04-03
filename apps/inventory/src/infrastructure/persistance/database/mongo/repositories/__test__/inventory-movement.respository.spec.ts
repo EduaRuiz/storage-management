@@ -201,7 +201,9 @@ describe('InventoryMovementMongoRepository', () => {
         { _id: '2', name: 'Test Movement 2' },
       ];
       jest.spyOn(model, 'find').mockReturnValueOnce({
-        exec: jest.fn().mockResolvedValueOnce(inventoryMovements),
+        populate: jest.fn().mockReturnValueOnce({
+          exec: jest.fn().mockResolvedValueOnce(inventoryMovements),
+        }),
       } as any);
 
       // Act
