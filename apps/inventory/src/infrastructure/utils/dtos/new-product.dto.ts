@@ -1,5 +1,6 @@
 import { IsDefined, IsNotEmpty, IsPositive, IsString } from 'class-validator';
 import { INewProductDomainDto } from '../../../domain/dtos';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * DTO de nuevo producto
@@ -18,6 +19,7 @@ export class NewProductDto implements INewProductDomainDto {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
+  @ApiProperty()
   name: string;
 
   /**
@@ -29,6 +31,7 @@ export class NewProductDto implements INewProductDomainDto {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
+  @ApiProperty()
   description: string;
 
   /**
@@ -39,5 +42,6 @@ export class NewProductDto implements INewProductDomainDto {
    */
   @IsDefined()
   @IsPositive()
+  @ApiProperty()
   price: number;
 }

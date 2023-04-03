@@ -44,6 +44,7 @@ export class InventoryMovementMongoService
       map((inventoryMovements: InventoryMovementMongoModel[]) => {
         return inventoryMovements.filter(
           (inventoryMovement: InventoryMovementMongoModel) => {
+            console.log(inventoryMovement);
             return (
               inventoryMovement.stock.product._id.toString() ===
               productId.toString()

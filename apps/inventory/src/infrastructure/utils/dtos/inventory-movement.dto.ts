@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IInventoryMovementDomainDto } from 'apps/inventory/src/domain/dtos';
 import {
   IsDefined,
@@ -27,6 +28,7 @@ export class InventoryMovementDto implements IInventoryMovementDomainDto {
   @Matches(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i), {
     message: 'ProductId is not valid',
   })
+  @ApiProperty()
   productId: string;
 
   /**
@@ -40,6 +42,7 @@ export class InventoryMovementDto implements IInventoryMovementDomainDto {
   @Matches(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i), {
     message: 'LocationId is not valid',
   })
+  @ApiProperty()
   locationId: string;
 
   /**
@@ -51,6 +54,7 @@ export class InventoryMovementDto implements IInventoryMovementDomainDto {
   @IsDefined()
   @IsPositive()
   @IsInt()
+  @ApiProperty()
   quantity: number;
 
   /**
@@ -62,5 +66,6 @@ export class InventoryMovementDto implements IInventoryMovementDomainDto {
   @IsString()
   @IsDefined()
   @IsIn(['IN', 'OUT'])
+  @ApiProperty()
   typeMovement: 'IN' | 'OUT';
 }

@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IUpdateProductDomainDto } from 'apps/inventory/src/domain/dtos';
 import {
   IsDefined,
@@ -27,6 +28,7 @@ export class UpdateProductDto implements IUpdateProductDomainDto {
   @Matches(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i), {
     message: 'ProductId is not valid',
   })
+  @ApiProperty()
   _id?: string;
 
   /**
@@ -39,6 +41,7 @@ export class UpdateProductDto implements IUpdateProductDomainDto {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
+  @ApiProperty()
   name?: string;
 
   /**
@@ -51,6 +54,7 @@ export class UpdateProductDto implements IUpdateProductDomainDto {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
+  @ApiProperty()
   description?: string;
 
   /**
@@ -62,5 +66,6 @@ export class UpdateProductDto implements IUpdateProductDomainDto {
   @IsOptional()
   @IsDefined()
   @IsPositive()
+  @ApiProperty()
   price?: number;
 }

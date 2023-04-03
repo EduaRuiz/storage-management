@@ -57,19 +57,25 @@ export class RegisterInventoryMovementUseCase {
           throw new NotFoundException('Location not found', error.message);
         }),
         switchMap(() =>
-          this.stock$.findByProductIdAndLocationId(
-            inventoryMovementDto.productId,
-            inventoryMovementDto.locationId,
-          ),
-        ),
-        catchError((error) =>
-          iif(
-            () => inventoryMovementDto.typeMovement === 'IN',
-            this.createStock(inventoryMovementDto),
-            throwError(
-              new BadRequestException('No stock to remove', error.message),
+          this.stock$
+            .findByProductIdAndLocationId(
+              inventoryMovementDto.productId,
+              inventoryMovementDto.locationId,
+            )
+            .pipe(
+              catchError((error) =>
+                iif(
+                  () => inventoryMovementDto.typeMovement === 'IN',
+                  this.createStock(inventoryMovementDto),
+                  throwError(
+                    new BadRequestException(
+                      'No stock to remove',
+                      error.message,
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
         ),
       );
 

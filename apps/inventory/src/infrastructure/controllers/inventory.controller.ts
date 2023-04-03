@@ -42,6 +42,14 @@ import {
   ProductDomainModel,
   StockDomainModel,
 } from '@inventory/domain/models';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LocationSwaggerEntity } from '@storage/infrastructure/utils/swagger-types';
+import {
+  BadRequestSwagger,
+  ConflictSwagger,
+  NotFoundSwagger,
+  UnauthorizedSwagger,
+} from '../utils/swagger-types/errors';
 
 /**
  * Controlador de inventario
@@ -50,6 +58,7 @@ import {
  * @class InventoryController
  */
 @Controller('inventory')
+@ApiTags('Inventory Management API')
 export class InventoryController {
   /**
    * Crea una instancia de InventoryController
@@ -84,6 +93,37 @@ export class InventoryController {
    */
   @UseGuards(JwtGuard)
   @Post('product/create')
+  @ApiOperation({
+    summary:
+      'Crea un nuevo producto en el inventario del sistema y lo publica en el bus de eventos',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Producto creado exitosamente en el inventario del sistema y publicado en el bus de eventos',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      'No se encontró el producto solicitado en el inventario del sistema',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   createProduct(
     @Body() product: NewProductDto,
   ): Observable<ProductDomainModel> {
@@ -104,6 +144,36 @@ export class InventoryController {
    */
   @UseGuards(JwtGuard)
   @Put('product/update/:id')
+  @ApiOperation({
+    summary:
+      'Actualiza la información de un producto en el inventario del sistema y lo publica en el bus de eventos',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Producto actualizado exitosamente en el inventario del sistema y publicado en el bus de eventos',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontró el producto solicitado',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   updateProduct(
     @Param('id') productId: string,
     @Body() product: UpdateProductDto,
@@ -124,6 +194,36 @@ export class InventoryController {
    */
   @UseGuards(JwtGuard)
   @Get('product/info/:id')
+  @ApiOperation({
+    summary:
+      'Obtiene la información de un producto en el inventario del sistema',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Producto encontrado exitosamente en el inventario del sistema',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontró el producto solicitado',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   getProductInfo(
     @Param('id') productId: string,
   ): Observable<ProductDomainModel> {
@@ -141,6 +241,36 @@ export class InventoryController {
    */
   @UseGuards(JwtGuard)
   @Post('movement/register')
+  @ApiOperation({
+    summary:
+      'Registra un movimiento de inventario en el inventario del sistema y lo publica en el bus de eventos',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Movimiento de inventario registrado exitosamente en el sistema y publicado en el bus de eventos',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontró el producto solicitado, la ubicación o stock',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   registerInventoryMovement(
     @Headers('authorization') authHeader: string,
     @Body() movement: InventoryMovementDto,
@@ -165,6 +295,36 @@ export class InventoryController {
    */
   @UseGuards(JwtGuard)
   @Get('inventory-movements/product/:id')
+  @ApiOperation({
+    summary:
+      'Obtiene los movimientos de inventario de un producto en el inventario del sistema',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Movimientos de inventario encontrados exitosamente en el sistema',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontró el producto solicitado',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   getInventoryMovementsByProduct(
     @Param('id') productId: string,
   ): Observable<InventoryMovementDomainModel[]> {
@@ -183,6 +343,34 @@ export class InventoryController {
    */
   @UseGuards(JwtGuard)
   @Get('stocks/product/:id')
+  @ApiOperation({
+    summary: 'Obtiene los stocks de un producto en el inventario del sistema',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Stocks encontrados exitosamente en el sistema',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontró el producto solicitado',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   getStocksByProduct(
     @Param('id') productId: string,
   ): Observable<StockDomainModel[]> {
@@ -199,6 +387,36 @@ export class InventoryController {
    */
   @UseGuards(JwtGuard)
   @Delete('product/:id')
+  @ApiOperation({
+    summary:
+      'Elimina un producto en el inventario del sistema y lo publica en el bus de eventos',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Producto eliminado exitosamente en el sistema y publicado en el bus de eventos',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontró el producto solicitado',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   deleteProduct(
     @Param('id') productId: string,
   ): Observable<ProductDomainModel> {

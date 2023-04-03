@@ -37,7 +37,13 @@ export class UpdateLocationInfoUseCase {
   ): Observable<LocationDomainModel> {
     return this.location$.getLocationById(entityId).pipe(
       switchMap((entity: LocationDomainModel) => {
-        entity = { ...entity, ...dto, _id: entityId };
+        entity = {
+          name: entity.name,
+          description: entity.description,
+          address: entity.address,
+          ...dto,
+          _id: entityId,
+        };
         return this.location$.updateLocation(entityId, entity).pipe(
           tap((entity: LocationDomainModel) => {
             this.updatedLocationInfoDomainEvent.publish(entity);

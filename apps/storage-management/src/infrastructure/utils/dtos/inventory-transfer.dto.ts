@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDefined,
   IsInt,
@@ -24,6 +25,7 @@ export class InventoryTransferDto {
   @Matches(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i), {
     message: 'ProductId is not valid',
   })
+  @ApiProperty()
   productId: string;
 
   /**
@@ -37,6 +39,7 @@ export class InventoryTransferDto {
   @Matches(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i), {
     message: 'LocationInId is not valid',
   })
+  @ApiProperty()
   locationInId: string;
 
   /**
@@ -50,6 +53,7 @@ export class InventoryTransferDto {
   @Matches(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i), {
     message: 'LocationOutId is not valid',
   })
+  @ApiProperty()
   locationOutId: string;
 
   /**
@@ -61,5 +65,6 @@ export class InventoryTransferDto {
   @IsDefined()
   @IsPositive()
   @IsInt()
+  @ApiProperty()
   quantity: number;
 }

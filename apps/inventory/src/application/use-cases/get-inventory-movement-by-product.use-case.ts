@@ -27,6 +27,6 @@ export class GetInventoryMovementsByProductUseCase {
    * @memberof GetInventoryMovementsByProductUseCase
    */
   execute(productId: string): Observable<InventoryMovementDomainModel[]> {
-    return this.inventoryMovement$.findAllByProductId(productId).pipe();
+    return this.inventoryMovement$.findAllByProductId(productId);
   }
 }

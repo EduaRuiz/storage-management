@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 /**
@@ -16,6 +17,7 @@ export class NewLocationDto {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
+  @ApiProperty()
   name: string;
 
   /**
@@ -27,6 +29,7 @@ export class NewLocationDto {
   @IsString()
   @IsNotEmpty()
   @IsDefined()
+  @ApiProperty()
   description: string;
 
   /**
@@ -39,5 +42,6 @@ export class NewLocationDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(100)
+  @ApiProperty()
   address: string;
 }

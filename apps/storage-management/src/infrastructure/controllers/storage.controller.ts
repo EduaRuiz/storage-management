@@ -36,6 +36,17 @@ import {
 } from '../../domain/models';
 import { ProductExistService } from '../utils/services';
 import { JwtGuard } from '../utils/guards';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  BadRequestSwagger,
+  InventoryTransferSwaggerEntity,
+  LocationSwaggerEntity,
+} from '../utils/swagger-types';
+import {
+  ConflictSwagger,
+  NotFoundSwagger,
+  UnauthorizedSwagger,
+} from '@inventory/infrastructure/utils/swagger-types/errors';
 
 /**
  * Controlador de almacenamiento
@@ -45,6 +56,7 @@ import { JwtGuard } from '../utils/guards';
  */
 @Controller('storage')
 // @UseFilters(MongoServerErrorExceptionFilter)
+@ApiTags('Storage Management API')
 export class StorageController {
   /**
    * Crea una instancia de StorageController
@@ -77,6 +89,35 @@ export class StorageController {
    */
   @UseGuards(JwtGuard)
   @Post('location/create')
+  @ApiOperation({
+    summary:
+      'Registra una nueva ubicación en el sistema de almacenamiento y devuelve la ubicación creada',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'La ubicación creada se devuelve en el cuerpo de la respuesta',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontró la ubicación',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   registerNewLocation(
     @Body() newLocationDto: NewLocationDto,
   ): Observable<LocationDomainModel> {
@@ -96,6 +137,36 @@ export class StorageController {
    */
   @UseGuards(JwtGuard)
   @Get('location/info/:_id')
+  @ApiOperation({
+    summary:
+      'Obtiene la información de una ubicación en el sistema de almacenamiento y devuelve la ubicación',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'La ubicación buscada se devuelve en el cuerpo de la respuesta',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontró la ubicación',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   getLocationInfo(
     @Param('_id') locationId: string,
   ): Observable<LocationDomainModel> {
@@ -115,6 +186,36 @@ export class StorageController {
    */
   @UseGuards(JwtGuard)
   @Put('location/update/:_id')
+  @ApiOperation({
+    summary:
+      'Actualiza la información de una ubicación en el sistema de almacenamiento y devuelve la ubicación actualizada',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'La ubicación actualizada se devuelve en el cuerpo de la respuesta',
+    type: LocationSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontró la ubicación',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   updateLocation(
     @Body() updateLocationDto: UpdateLocationDto,
     @Param('_id') locationId: string,
@@ -136,6 +237,37 @@ export class StorageController {
    */
   @UseGuards(JwtGuard)
   @Post('inventory-transfer/register')
+  @ApiOperation({
+    summary:
+      'Registra una transferencia de inventario en el sistema de almacenamiento y devuelve la transferencia de inventario registrada',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'La transferencia de inventario registrada se devuelve en el cuerpo de la respuesta',
+    type: InventoryTransferSwaggerEntity,
+  })
+  @ApiResponse({
+    status: 404,
+    description:
+      'No se encontró el producto, el stock y/o la ubicación para la transferencia de inventario',
+    type: NotFoundSwagger,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Errores en la petición',
+    type: BadRequestSwagger,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado',
+    type: UnauthorizedSwagger,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflicto',
+    type: ConflictSwagger,
+  })
   registerInventoryTransfer(
     @Headers('authorization') authHeader: string,
     @Body() inventoryTransferDto: InventoryTransferDto,

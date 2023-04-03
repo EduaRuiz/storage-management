@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { MaxLength, IsNotEmpty } from 'class-validator';
 import { IsDefined, IsOptional, IsString, Matches } from 'class-validator';
 
@@ -19,6 +20,7 @@ export class UpdateLocationDto {
   @Matches(new RegExp(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i), {
     message: 'LocationId is not valid',
   })
+  @ApiProperty()
   _id?: string;
 
   /**
@@ -30,6 +32,7 @@ export class UpdateLocationDto {
   @IsOptional()
   @IsString()
   @IsDefined()
+  @ApiProperty()
   name?: string;
 
   /**
@@ -42,6 +45,7 @@ export class UpdateLocationDto {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
+  @ApiProperty()
   description?: string;
 
   /**
@@ -55,5 +59,6 @@ export class UpdateLocationDto {
   @IsDefined()
   @IsNotEmpty()
   @MaxLength(100)
+  @ApiProperty()
   address?: string;
 }

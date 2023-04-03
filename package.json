@@ -32,7 +32,7 @@
     "@nestjs/mongoose": "^9.2.2",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
-    "@nestjs/swagger": "^6.2.1",
+    "@nestjs/swagger": "^6.3.0",
     "@nestjs/typeorm": "^9.0.1",
     "amqp-connection-manager": "^4.1.11",
     "amqplib": "^0.10.3",
@@ -103,6 +103,8 @@
       "main\\.ts$",
       "<rootDir>/node_modules/",
       "<rootDir>/dist/",
+      "<rootDir>/apps/inventory/docs/",
+      "<rootDir>/apps/storage-management/docs/",
       "<rootDir>/environments/",
       "<rootDir>/apps/inventory/test/",
       "<rootDir>/apps/storage-management/test/"

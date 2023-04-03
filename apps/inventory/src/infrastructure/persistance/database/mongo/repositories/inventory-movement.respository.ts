@@ -117,7 +117,17 @@ export class InventoryMovementMongoRepository
    * @memberof InventoryMovementMongoRepository
    */
   findAll(): Observable<InventoryMovementMongoModel[]> {
-    return from(this.inventoryMovementMongoModel.find().exec()).pipe(
+    return from(
+      this.inventoryMovementMongoModel
+        .find()
+        .populate({
+          path: 'stock',
+          populate: {
+            path: 'product',
+          },
+        })
+        .exec(),
+    ).pipe(
       map((entities: InventoryMovementMongoModel[]) => {
         return entities;
       }),
